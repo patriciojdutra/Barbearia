@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Telas.Produto.DescricaoProdutoActivity"
+    tools:showIn="@layout/activity_descricao_produto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout12"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtQuantDescricao">
+
+            <Button
+                android:id="@+id/btnMenos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/corGeral"
+                android:text="-"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/txtQuantidadeSelecionada"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_weight="1"
+                    android:digits="0123456789"
+                    android:fontFamily="sans-serif"
+                    android:inputType="numberDecimal"
+                    android:text="1"
+                    android:textAlignment="center"
+                    android:textColor="@color/corGeral"
+                    android:textSize="30sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/btnMais"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1  "
+                android:backgroundTint="@color/corGeral"
+                android:text="+"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgProdutoDescricao"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/foto" />
+
+        <TextView
+            android:id="@+id/txtNomeDescricao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Nome do produto "
+            android:textAlignment="center"
+            android:textColor="@color/corGeral"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgProdutoDescricao" />
+
+        <TextView
+            android:id="@+id/txtPrecoDescricao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="Valor"
+            android:textColor="@color/corGeral"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtNomeDescricao" />
+
+        <TextView
+            android:id="@+id/txtQuantDescricao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Quantidade"
+            android:textColor="@color/corGeral"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtPrecoDescricao" />
+
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnAdicionarNaSacola"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout12">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtDescricao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No Android 6.0 (API de nível 23) e versões anteriores, outros apps poderão ler seus arquivos internos se você definir o modo de arquivo como legível. No entanto, o outro app precisa saber o nome do pacote do app e os nomes dos arquivos. Outros apps não podem navegar nos diretórios internos e não têm permissão para leitura ou gravação, a menos que os arquivos sejam explicitamente definidos para essas ações. Portanto, contanto que você use o MODE_PRIVATE para seus arquivos no armazenamento interno, eles nunca ficarão acessíveis para outros apps. No Android 6.0 (API de nível 23) e versões anteriores, outros apps poderão ler seus arquivos internos se você definir o modo de arquivo como legível. No entanto, o outro app precisa saber o nome do pacote do app e os nomes dos arquivos. Outros apps não podem navegar nos diretórios internos e não têm permissão para leitura ou gravação, a menos que os arquivos sejam explicitamente definidos para essas ações. Portanto, contanto que você use o MODE_PRIVATE para seus arquivos no armazenamento interno, eles nunca ficarão acessíveis para outros apps. No Android 6.0 (API de nível 23) e versões anteriores, outros apps poderão ler seus arquivos internos se você definir o modo de arquivo como legível. No entanto, o outro app precisa saber o nome do pacote do app e os nomes dos arquivos. Outros apps não podem navegar nos diretórios internos e não têm permissão para leitura ou gravação, a menos que os arquivos sejam explicitamente definidos para essas ações. Portanto, contanto que você use o MODE_PRIVATE para seus arquivos no armazenamento interno, eles nunca ficarão acessíveis para outros apps. No Android 6.0 (API de nível 23) e versões anteriores, outros apps poderão ler seus arquivos internos se você definir o modo de arquivo como legível. No entanto, o outro app precisa saber o nome do pacote do app e os nomes dos arquivos. Outros apps não podem navegar nos diretórios internos e não têm permissão para leitura ou gravação, a menos que os arquivos sejam explicitamente definidos para essas ações. Portanto, contanto que você use o MODE_PRIVATE para seus arquivos no armazenamento interno, eles nunca ficarão acessíveis para outros apps."
+                    android:textAlignment="center"
+                    android:visibility="visible" />
+            </LinearLayout>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/btnAdicionarNaSacola"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:backgroundTint="@color/corGeral"
+            android:text="Adicionar na sacola"
+            android:textColor="#F8FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

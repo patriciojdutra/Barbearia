@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+
+        <!--<item-->
+            <!--android:id="@+id/nav_gerenciamento"-->
+            <!--android:icon="@drawable/baseline_card_travel_black_48"-->
+            <!--android:title="Gerenciamento" />-->
+        <item
+            android:id="@+id/nav_meus_atendimentos"
+            android:icon="@drawable/baseline_today_black_48"
+            android:title="Meus Atendimentos" />
+
+        <item
+            android:id="@+id/nav_agendamento"
+            android:icon="@drawable/baseline_calendar_today_black_48"
+            android:title="@string/menu_home" />
+
+        <!--<item-->
+            <!--android:id="@+id/nav_carrinho"-->
+            <!--android:icon="@drawable/baseline_shopping_cart_white_48"-->
+            <!--android:title="Carrinho" />-->
+
+        <item
+            android:id="@+id/nav_servicos"
+            android:icon="@drawable/tesoura"
+            android:title="@string/menu_gallery" />
+
+        <item
+            android:id="@+id/nav_barbeiros"
+            android:icon="@drawable/cortando"
+            android:title="Barbeiros" />
+
+        <item
+            android:id="@+id/nav_localizacao"
+            android:icon="@drawable/baseline_location_on_black_48"
+            android:title="@string/menu_slideshow" />
+        <item
+            android:id="@+id/nav_meu_perfil"
+            android:icon="@drawable/baseline_person_black_48"
+            android:title="@string/menu_tools" />
+
+        <!--<item-->
+            <!--android:id="@+id/nav_reclame_aqui"-->
+            <!--android:icon="@drawable/baseline_thumb_down_black_48"-->
+            <!--android:title="Reclame aqui" />-->
+
+        <!--<item-->
+            <!--android:id="@+id/nav_configuracao"-->
+            <!--android:icon="@drawable/baseline_settings_black_48"-->
+            <!--android:title="Configuração" />-->
+
+        <item
+            android:id="@+id/nav_sair"
+            android:icon="@android:drawable/ic_delete"
+            android:title="Sair" />
+    </group>
+</menu>

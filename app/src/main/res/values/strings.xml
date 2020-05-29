@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Império Do Corte</string>
+    <string name="title_activity_dash_board">Home</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Agendamento</string>
+    <string name="menu_gallery">Serviços</string>
+    <string name="menu_slideshow">Localização</string>
+    <string name="menu_tools">Meus Dados</string>
+    <string name="title_activity_login"></string>
+    <string name="title_activity_servicos">Serviços</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_gerenciamento">Menu de gerenciamento</string>
+    <string name="title_activity_corte_manager">Menu Cortes</string>
+    <string name="title_activity_dados_usuario">Meus dados</string>
+    <string name="title_activity_cadastro_de_produto">Cadastro de produto</string>
+    <string name="title_activity_lista_de_produtos">Produtos</string>
+    <string name="title_activity_descricao_produto">Sobre o produto</string>
+    <string name="title_activity_carrinho">Carrinho</string>
+    <string name="title_activity_cadastro_de_pagamento"></string>
+    <string name="title_activity_painel_infoclientes">Painel</string>
+    <string name="title_activity_meus_agendamentos">Meus Agendamentos</string>
+    <string name="title_activity_reclame_aqui">Reclame aqui</string>
+    <string name="title_activity_configuracao">Configuração</string>
+</resources>
