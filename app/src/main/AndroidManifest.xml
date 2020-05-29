@@ -9,11 +9,96 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logonormal"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logonormal"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Configuracao.ConfiguracaoActivity"
+            android:label="@string/title_activity_configuracao"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.ReclameAqui.ReclameAquiActivity"
+            android:label="@string/title_activity_reclame_aqui"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Agendamento.MeusAgendamentosActivity"
+            android:label="@string/title_activity_meus_agendamentos"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Cliente.PainelInfoclientesActivity"
+            android:label="@string/title_activity_painel_infoclientes"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Pagamento.CadastroDePagamentoActivity"
+            android:label="@string/title_activity_cadastro_de_pagamento"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Carrinho.CarrinhoActivity"
+            android:label="@string/title_activity_carrinho"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="br.com.dutra.barbearia.Telas.Pagamento.PagamentoActivity" />
+        <activity android:name="br.com.dutra.barbearia.Telas.BatePapo.ConversaActivity" />
+        <activity android:name="br.com.dutra.barbearia.Telas.BatePapo.ListaDeConversasActivity" />
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Produto.DescricaoProdutoActivity"
+            android:label="@string/title_activity_descricao_produto"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Produto.ListaDeProdutosActivity"
+            android:label="@string/title_activity_lista_de_produtos"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Produto.CadastroDeProdutoActivity"
+            android:label="@string/title_activity_cadastro_de_produto"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Usuario.DadosUsuarioActivity"
+            android:label="@string/title_activity_dados_usuario"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="br.com.dutra.barbearia.Telas.Corte.CadastroDeCortesActivity" />
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Corte.CorteManagerActivity"
+            android:label="@string/title_activity_corte_manager"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Sistema.GerenciamentoActivity"
+            android:label="@string/title_activity_gerenciamento"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="br.com.dutra.barbearia.Telas.Corte.InfoCorteActivity" />
+        <activity android:name="br.com.dutra.barbearia.Telas.Corte.ListaDeCortesActivity" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Local.MapsActivity"
+            android:label="@string/title_activity_maps" />
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Sistema.ServicosActivity"
+            android:label="@string/title_activity_servicos"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="br.com.dutra.barbearia.Telas.Agendamento.AgendaActivity" />
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Sistema.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="br.com.dutra.barbearia.Telas.Usuario.CadastroUsuarioActivity" />
+        <activity
+            android:name="br.com.dutra.barbearia.Telas.Sistema.DashBoardActivity"
+            android:label="@string/title_activity_dash_board"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service android:name="br.com.dutra.barbearia.FCMService.FCMService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <activity android:name=".Telas.Sistema.TelaInicialActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,13 +106,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name="br.com.dutra.barbearia.Telas.Sistema.DashBoardActivity"
-            android:label="@string/title_activity_dash_board"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-
     </application>
 
 </manifest>
