@@ -104,7 +104,7 @@ public class CadastroDeProdutoActivity extends AppCompatActivity {
          editTextTipo = findViewById(R.id.editTextTipo);
          editTextQuantidade = findViewById(R.id.editTextQuantidade);
          edtDescricao = findViewById(R.id.edtDescricao);
-         btnSalvar = findViewById(R.id.btnSalvarCartao);
+         btnSalvar = findViewById(R.id.btnLogar);
 
     }
 

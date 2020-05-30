@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "198207306216",
+    "firebase_url": "https://barbearia-imperio-do-cor-29200.firebaseio.com",
+    "project_id": "barbearia-imperio-do-cor-29200",
+    "storage_bucket": "barbearia-imperio-do-cor-29200.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198207306216:android:cb05405d7e8cbb03978c5d",
+        "android_client_info": {
+          "package_name": "br.com.dutra.barbearia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198207306216-mpvv2972c14k0d4sqkpp0nfdh7iolk71.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.dutra.barbearia",
+            "certificate_hash": "bbec288cb4296be76026cc85efa0eedc1a14937c"
+          }
+        },
+        {
+          "client_id": "198207306216-e0pv9nqvv35veddlcghb31q5pga1ivie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2NmYHwQTqVgpFttDF7lJ4nrJ2FfkChS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "198207306216-e0pv9nqvv35veddlcghb31q5pga1ivie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198207306216:android:945372c3fbfb607d",
+        "android_client_info": {
+          "package_name": "com.dutra.barbearia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198207306216-7a26s02pn9qkk5l06185ho4ihfekhr53.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dutra.barbearia",
+            "certificate_hash": "baaa1a5eb100835a83e1b807c3593771c33901d5"
+          }
+        },
+        {
+          "client_id": "198207306216-e0pv9nqvv35veddlcghb31q5pga1ivie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2NmYHwQTqVgpFttDF7lJ4nrJ2FfkChS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "198207306216-e0pv9nqvv35veddlcghb31q5pga1ivie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

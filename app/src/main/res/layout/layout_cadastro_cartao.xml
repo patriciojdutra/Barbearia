@@ -168,7 +168,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/btnSalvarCartao"
+        android:id="@+id/btnLogar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -190,7 +190,7 @@
         android:text="  Cancelar  "
         android:textColor="#FFFFFF"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/btnSalvarCartao"
+        app:layout_constraintEnd_toStartOf="@+id/btnLogar"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

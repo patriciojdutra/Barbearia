@@ -8,12 +8,12 @@ import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
 import br.com.dutra.barbearia.R;
-import br.com.dutra.barbearia.controller.MudarTelaController;
+import br.com.dutra.barbearia.Controllers.MudarTelaController;
 
 public class TelaInicialActivity extends AppCompatActivity {
 
     private Activity act = this;
-    private int tempoDeEspera = 3000;
+    private int tempoDeEspera = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

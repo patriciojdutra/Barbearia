@@ -6,28 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Telas.Sistema.LoginActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:alpha=".5"
-        android:background="@color/common_google_signin_btn_text_dark_focused"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/background2" />
-
     <include layout="@layout/content_login" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -129,19 +129,19 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
         txtTempoEspera = findViewById(R.id.txtTempoEspera);
         txtQuantidadeEspera = findViewById(R.id.txtQuantidadeEspera);
 
-//        if( Utilitario.verifiacrAutencicao(act)){
-//
-//            //PagamentoController pagamentoController = new PagamentoController(this);
-//            //pagamentoController.cadastrarClienteNoWireCard();
-//
-//            ConfiguracaoApplication application = (ConfiguracaoApplication) getApplication();
-//            getApplication().registerActivityLifecycleCallbacks(application);
-//            Utilitario.updateToken();
-//
-//            permisaoAcesGaleria();
-//            inicializaLista();
-//            buscarDadosUsuario();
-//        }
+        if( Utilitario.verifiacrAutencicao(act)){
+
+            //PagamentoController pagamentoController = new PagamentoController(this);
+            //pagamentoController.cadastrarClienteNoWireCard();
+
+            ConfiguracaoApplication application = (ConfiguracaoApplication) getApplication();
+            getApplication().registerActivityLifecycleCallbacks(application);
+            Utilitario.updateToken();
+
+            permisaoAcesGaleria();
+            inicializaLista();
+            buscarDadosUsuario();
+        }
 
     }
 
@@ -149,21 +149,21 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
     protected void onStart() {
         super.onStart();
 
-//        progressBar.setVisibility(View.GONE);
-//        imgSinc.setImageResource(R.drawable.sincnot);
-//        getFilaDeEspera();
-//
-//        FirebaseInstanceId.getInstance().getInstanceId()
-//                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-//                        if (!task.isSuccessful()) {
-//                            return;
-//                        }
-//                        String token = task.getResult().getToken();
-//                        setarTokenUsuario(token);
-//                    }
-//                });
+        progressBar.setVisibility(View.GONE);
+        imgSinc.setImageResource(R.drawable.sincnot);
+        getFilaDeEspera();
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            return;
+                        }
+                        String token = task.getResult().getToken();
+                        setarTokenUsuario(token);
+                    }
+                });
 
     }
 
@@ -530,7 +530,7 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
         ((ArrayAdapter) adapter1).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spTempo.setAdapter(adapter1);
 
-        Button btnSalvar = view.findViewById(R.id.btnSalvarCartao);
+        Button btnSalvar = view.findViewById(R.id.btnLogar);
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

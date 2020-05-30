@@ -1,14 +1,17 @@
 package br.com.dutra.barbearia.Telas.Sistema;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import br.com.dutra.barbearia.Controllers.MudarTelaController;
 import br.com.dutra.barbearia.Telas.Usuario.CadastroUsuarioActivity;
 import br.com.dutra.barbearia.Utilidades.AlertaUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,10 +28,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import br.com.dutra.barbearia.R;
+import br.com.dutra.barbearia.Utilidades.SharedPreferencesUtils;
+
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,8 +46,16 @@ import java.io.IOException;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private Activity act = this;
     private EditText edtUsuario;
     private EditText edtsenha;
+    private Button btnLogar;
+    private CheckBox checkBoxLembrarMe;
+    private Button btnCriarNovaConta;
+    private ImageButton imgBtnGoogle;
+    private ImageButton imgBtnFacebook;
+
+
     private AlertDialog.Builder alert;
     private Dialog dialog;
 
@@ -52,65 +68,61 @@ public class LoginActivity extends AppCompatActivity {
 
         edtUsuario = (EditText)findViewById(R.id.edtUsuario);
         edtsenha = (EditText)findViewById(R.id.edtSenha);
+        btnLogar = (Button)findViewById(R.id.btnLogar);
+        checkBoxLembrarMe = (CheckBox)findViewById(R.id.checkBoxLembrarMe);
+        btnCriarNovaConta = (Button)findViewById(R.id.btnCriarNovaConta);
+        imgBtnGoogle = (ImageButton)findViewById(R.id.imgBtnGoogle);
+        imgBtnFacebook = (ImageButton)findViewById(R.id.imgBtnFacebook);
+
+        init();
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public void init(){
 
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_login, menu);
+        checkBoxLembrarMe.setChecked(SharedPreferencesUtils.buscarBooleanPreferences("lembrarme",act));
+        edtUsuario.setText(SharedPreferencesUtils.buscarStringPreferences("email",act));
+        edtsenha.setText(SharedPreferencesUtils.buscarStringPreferences("senha",act));
 
-        return super.onCreateOptionsMenu(menu);
-    }
+        btnCriarNovaConta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MudarTelaController.irParaCadastroDeUsuario(false,act);
+            }
+        });
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+        btnLogar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        int id = item.getItemId();
+                String email = edtUsuario.getText().toString();
+                String password = edtsenha.getText().toString();
 
-        if (id == R.id.action_cadastrar) {
+                if(validarDadosLogin(email,password)) {
 
-            Intent mudarTela = new Intent(this, CadastroUsuarioActivity.class);
-            startActivity(mudarTela);
-            return true;
-        }
+                    AlertaUtils.dialogLoad(act);
 
-        return super.onOptionsItemSelected(item);
-    }
+                    FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
 
-    public void login(View v){
-
-        String email = edtUsuario.getText().toString();
-        String password = edtsenha.getText().toString();
-
-        if(validarDadosLogin(email,password)) {
-
-            dialogLoad();
-
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-
-                            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            if (user != null) {
-
-                                Intent it = new Intent(getApplicationContext(), DashBoardActivity.class);
-                                startActivity(it);
-                                finish();
-                            }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                            dialog.dismiss();
-                            dialogSimples(e.getMessage());
-                        }
-                    });
-        }
+                                    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                    if (user != null) {
+                                        MudarTelaController.irParaDashboard(true,act);
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    AlertaUtils.getDialog().dismiss();
+                                    AlertaUtils.dialogSimples(e.getMessage(),act);
+                                }
+                            });
+                }
+            }
+        });
     }
 
     public boolean validarDadosLogin(String email, String senha){
@@ -185,55 +197,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
+        if(checkBoxLembrarMe.isChecked()) {
+            SharedPreferencesUtils.salvarStringPreferences("email", email, act);
+            SharedPreferencesUtils.salvarStringPreferences("senha", senha, act);
+        }else {
+            SharedPreferencesUtils.salvarStringPreferences("email", "", act);
+            SharedPreferencesUtils.salvarStringPreferences("senha", "", act);
+        }
+
+        SharedPreferencesUtils.salvarBooleanPreferences("lembrarme",checkBoxLembrarMe.isChecked(),act);
+
         return valido;
-    }
-
-    public void SaveImage(Bitmap finalBitmap) throws IOException {
-
-        String FILENAME = FirebaseAuth.getInstance().getUid() + ".jpg";
-
-        FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-        finalBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        fos.flush();
-        fos.close();
-
-    }
-
-    public void dialogSimples(String txt) {
-
-        AlertDialog alerta;
-        //Cria o gerador do AlertDialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //define o titulo
-        builder.setTitle("Aviso");
-        //define a mensagem
-        builder.setMessage(txt);
-        //define um botão como positivo
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int res) {
-
-            }
-        });
-
-        //cria o AlertDialog
-        alerta = builder.create();
-        alerta.show();
-    }
-
-    public void dialogLoad()
-    {
-        alert = new AlertDialog.Builder(this);
-        alert.setTitle("Aguarde um momento...");
-        alert.setMessage("Carregando");
-        alert.setCancelable(false);
-        final ProgressBar input = new ProgressBar (this);
-        alert.setView(input);
-
-        alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface aleDialog, int whichButton) {
-
-            }
-        });
-        dialog = alert.show();
     }
 }

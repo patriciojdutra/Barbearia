@@ -106,7 +106,7 @@ public class CadastroDeCortesActivity extends AppCompatActivity {
 
     public void associacaoDeComponentes(){
 
-        btnSalvar = findViewById(R.id.btnSalvarCartao);
+        btnSalvar = findViewById(R.id.btnLogar);
 
         edtNomeDoCorte = findViewById(R.id.edtNomeDoCorte);
         edtPrecoDoCorte = findViewById(R.id.edtPrecoDoCorte);

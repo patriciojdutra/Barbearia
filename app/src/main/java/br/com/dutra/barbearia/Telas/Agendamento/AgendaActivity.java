@@ -129,7 +129,7 @@ public class AgendaActivity extends AppCompatActivity {
         txtTipoDeCorte = findViewById(R.id.txtTipoDeCorte);
         txtNomeBarbeiro = findViewById(R.id.txtNomeBarbeiro);
         txtEndereco = findViewById(R.id.txtEndereco);
-        btnSalvar = findViewById(R.id.btnSalvarCartao);
+        btnSalvar = findViewById(R.id.btnLogar);
 
    }
 

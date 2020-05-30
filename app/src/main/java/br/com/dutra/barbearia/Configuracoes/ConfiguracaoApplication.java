@@ -7,8 +7,7 @@ import android.os.Bundle;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class ConfiguracaoApplication extends Application implements
-        Application.ActivityLifecycleCallbacks{
+public class ConfiguracaoApplication extends Application implements Application.ActivityLifecycleCallbacks{
 
     private void setOnline(boolean enabled) {
         String uid = FirebaseAuth.getInstance().getUid();

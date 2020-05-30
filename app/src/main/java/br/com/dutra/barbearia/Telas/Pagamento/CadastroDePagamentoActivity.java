@@ -106,7 +106,7 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
                 editTextDataVencimento2 = view.findViewById(R.id.editTextDataValidade2);
                 editTextCVV = view.findViewById(R.id.editTextCVV);
                 txtNomeNoCartao = view.findViewById(R.id.txtNomeNoCartao);
-                Button btnSalvar = view.findViewById(R.id.btnSalvarCartao);
+                Button btnSalvar = view.findViewById(R.id.btnLogar);
                 Button btnCancelar = view.findViewById(R.id.btnCancelarCartao);
 
                 if(usuario!=null){
