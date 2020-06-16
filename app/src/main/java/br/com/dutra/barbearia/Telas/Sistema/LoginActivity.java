@@ -107,6 +107,8 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
 
+                                    AlertaUtils.getDialog().dismiss();
+
                                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                     if (user != null) {
                                         MudarTelaController.irParaDashboard(true,act);
