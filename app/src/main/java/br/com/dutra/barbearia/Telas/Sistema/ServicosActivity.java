@@ -1,5 +1,6 @@
 package br.com.dutra.barbearia.Telas.Sistema;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -35,7 +36,12 @@ public class ServicosActivity extends AppCompatActivity {
 //        Intent mudarTela = new Intent(getApplicationContext(), ListaDeProdutosActivity.class);
 //        startActivity(mudarTela);
 
-        AlertaUtils.dialogSimples("Essa funcionalidade ainda não está disponivel!",this);
+        AlertaUtils.dialogSimples("Essa funcionalidade ainda não está disponivel!", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        }, this);
 
     }
 }

@@ -1,6 +1,7 @@
 package br.com.dutra.barbearia.Utilidades;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 
 import java.util.Calendar;
 
@@ -24,7 +25,12 @@ public class ConvertUtils {
 
         }catch (Exception e){
 
-            AlertaUtils.dialogSimples("Ocorreu um erro com a data selecionada!",act);
+            AlertaUtils.dialogSimples("Ocorreu um erro com a data selecionada!", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
             return Calendar.getInstance();
         }
     }
@@ -48,7 +54,12 @@ public class ConvertUtils {
             case Calendar.SUNDAY:
                 return "Domingo";
             default:
-                AlertaUtils.dialogSimples("Ocorreu um erro ao buscar o dia da semana",act);
+                AlertaUtils.dialogSimples("Ocorreu um erro ao buscar o dia da semana", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }, act);
                 return "";
         }
 

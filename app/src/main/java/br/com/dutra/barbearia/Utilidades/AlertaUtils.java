@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.widget.ProgressBar;
 
+import br.com.dutra.barbearia.Controllers.MudarTelaController;
 import br.com.dutra.barbearia.R;
 import br.com.dutra.barbearia.Telas.Carrinho.CarrinhoActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,18 +25,15 @@ public class AlertaUtils {
         return dialog;
     }
 
-    public static void dialogSimples(String txt, Activity act) {
+    public static void dialogSimples(String txt, DialogInterface.OnClickListener clickListener, Activity act) {
 
         AlertDialog alerta;
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         builder.setTitle("Aviso");
         builder.setIcon(R.drawable.logo250);
         builder.setMessage(txt);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int res) {
-
-            }
-        });
+        builder.setCancelable(false);
+        builder.setPositiveButton("OK", clickListener);
 
         //cria o AlertDialog
         alerta = builder.create();
@@ -77,9 +75,8 @@ public class AlertaUtils {
 
         builder.setNegativeButton("SIM", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int res) {
-
                 FirebaseAuth.getInstance().signOut();
-                Utilitario.verifiacrAutencicao(act);
+                MudarTelaController.irParaTelaDeLogin(true, act);
             }
         });
 

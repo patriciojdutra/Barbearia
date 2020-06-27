@@ -297,7 +297,12 @@ public class AgendaActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         AlertaUtils.getDialog().dismiss();
-                        AlertaUtils.dialogSimples(e.getMessage(),act);
+                        AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }, act);
                     }
                 });
     }
@@ -360,7 +365,12 @@ public class AgendaActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        AlertaUtils.dialogSimples("Erro (P02)\nNão foi possivel cadastrar usuário",act);
+                        AlertaUtils.dialogSimples("Erro (P02)\nNão foi possivel cadastrar usuário", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }, act);
                     }
                 });
 
@@ -383,7 +393,12 @@ public class AgendaActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 AlertaUtils.getDialog().dismiss();
-                AlertaUtils.dialogSimples("Ocorreu um erro",act);
+                AlertaUtils.dialogSimples("Ocorreu um erro", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }, act);
             }
         });
     }
@@ -423,7 +438,12 @@ public class AgendaActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     AlertaUtils.getDialog().dismiss();
-                    AlertaUtils.dialogSimples("Ocorreu um erro",act);
+                    AlertaUtils.dialogSimples("Ocorreu um erro", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    }, act);
                 }
             });
     }
@@ -450,7 +470,12 @@ public class AgendaActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         AlertaUtils.getDialog().dismiss();
-                        AlertaUtils.dialogSimples(e.getMessage(),act);
+                        AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }, act);
                     }
                 });
     }
@@ -465,27 +490,52 @@ public class AgendaActivity extends AppCompatActivity {
         String sEndereco = txtEndereco.getText().toString();
 
         if(nomeBarbeiro.equals("Clique aqui")){
-            AlertaUtils.dialogSimples("Informe um barbeiro para seu atendimento",act);
+            AlertaUtils.dialogSimples("Informe um barbeiro para seu atendimento", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
             return false;
         }
 
         if(data.equals("Clique aqui")){
-            AlertaUtils.dialogSimples("Informe uma data para o seu agendamento",act);
+            AlertaUtils.dialogSimples("Informe uma data para o seu agendamento", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
             return false;
         }
 
         if(horario.equals("Clique aqui")){
-            AlertaUtils.dialogSimples("Informe o horário do seu agendamento",act);
+            AlertaUtils.dialogSimples("Informe o horário do seu agendamento", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
             return false;
         }
 
         if(tipoDeCorte.equals("Clique aqui")){
-            AlertaUtils.dialogSimples("Informe o corte desejado",act);
+            AlertaUtils.dialogSimples("Informe o corte desejado", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
             return false;
         }
 
         if(sEndereco.equals("Clique aqui")){
-            AlertaUtils.dialogSimples("Devido ao surto de coronavírus, só será possível agendar atendimento em domicílio, por favor Informe o seu endereço",act);
+            AlertaUtils.dialogSimples("Devido ao surto de coronavírus, só será possível agendar atendimento em domicílio, por favor Informe o seu endereço", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
             return false;
         }
 

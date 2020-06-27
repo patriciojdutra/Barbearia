@@ -119,7 +119,12 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     AlertaUtils.getDialog().dismiss();
-                                    AlertaUtils.dialogSimples(e.getMessage(),act);
+                                    AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        }
+                                    }, act);
                                 }
                             });
                 }
@@ -168,32 +173,57 @@ public class LoginActivity extends AppCompatActivity {
 
         if(email.isEmpty()){
             edtUsuario.setHintTextColor(Color.RED);
-            AlertaUtils.dialogSimples("Informe seu email!", this);
+            AlertaUtils.dialogSimples("Informe seu email!", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, this);
             return false;
         }else {
             if(!email.contains("@")){
                 edtUsuario.setTextColor(Color.RED);
-                AlertaUtils.dialogSimples("Formato de email inválido,\né nescessário possuir '@' no texto!", this);
+                AlertaUtils.dialogSimples("Formato de email inválido,\né nescessário possuir '@' no texto!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }, this);
                 return false;
             }
 
             if(!email.contains(".com")){
                 edtUsuario.setTextColor(Color.RED);
-                AlertaUtils.dialogSimples("Formato de email inválido,\né nescessário terminar com '.com' no texto!", this);
+                AlertaUtils.dialogSimples("Formato de email inválido,\né nescessário terminar com '.com' no texto!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }, this);
                 return false;
             }
         }
 
         if(senha.isEmpty()){
             edtsenha.setHintTextColor(Color.RED);
-            AlertaUtils.dialogSimples("Informe sua senha!", this);
+            AlertaUtils.dialogSimples("Informe sua senha!", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, this);
             return false;
         }else {
 
             if(senha.length() < 6){
 
                 edtsenha.setTextColor(Color.RED);
-                AlertaUtils.dialogSimples("Senha inválida,\né nescessário ter no mínimo 6 dígitos!", this);
+                AlertaUtils.dialogSimples("Senha inválida,\né nescessário ter no mínimo 6 dígitos!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }, this);
                 return false;
 
             }

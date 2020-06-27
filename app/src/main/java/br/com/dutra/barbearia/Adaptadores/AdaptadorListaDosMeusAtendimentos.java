@@ -1,6 +1,7 @@
 package br.com.dutra.barbearia.Adaptadores;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -63,7 +64,12 @@ public class AdaptadorListaDosMeusAtendimentos extends BaseAdapter {
         btnCancelarAtendimento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertaUtils.dialogSimples("Cancelando atendimento com "+item.getNomeBarbeiro() ,act);
+                AlertaUtils.dialogSimples("Cancelando atendimento com " + item.getNomeBarbeiro(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }, act);
             }
         });
 

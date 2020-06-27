@@ -23,6 +23,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
 import br.com.dutra.barbearia.Configuracoes.ConfiguracaoApplication;
+import br.com.dutra.barbearia.Controllers.MudarTelaController;
 import br.com.dutra.barbearia.Modelo.Fila;
 import br.com.dutra.barbearia.Modelo.Usuario.Usuario;
 import br.com.dutra.barbearia.R;
@@ -84,21 +85,7 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
 
     private TextView txtNomeNoMenu;
     private CircleImageView imgDoUsuarioNoMenu;
-    private ImageView imgClientesAguardando;
-    private ImageView imgSinc;
-    private ProgressBar progressBar;
-    private TextView txtQuantidadeEspera;
-    private TextView txtTempoEspera;
-
-    private Spinner spQuantidade;
-    private Spinner spTempo;
-    private int quantidade;
-    private String tempo;
-
     Activity act = this;
-    List<DocumentSnapshot> docs;
-    List<String> listTempo = new ArrayList<>();
-    List<String>  listQuantidade = new ArrayList<>();
 
     MenuItem iconeGerenciamento;
     MenuItem iconeUpdate;
@@ -123,23 +110,15 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
         View headerView = navigationView.getHeaderView(0);
         txtNomeNoMenu = (TextView) headerView.findViewById(R.id.txtNomeNoMenu);
         imgDoUsuarioNoMenu = (CircleImageView)headerView.findViewById(R.id.imgFoto);
-        imgClientesAguardando = (ImageView) findViewById(R.id.imgClientesAguardando);
-        imgSinc = (ImageView) findViewById(R.id.imgSinc);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        txtTempoEspera = findViewById(R.id.txtTempoEspera);
-        txtQuantidadeEspera = findViewById(R.id.txtQuantidadeEspera);
+
 
         if( Utilitario.verifiacrAutencicao(act)){
-
-            //PagamentoController pagamentoController = new PagamentoController(this);
-            //pagamentoController.cadastrarClienteNoWireCard();
 
             ConfiguracaoApplication application = (ConfiguracaoApplication) getApplication();
             getApplication().registerActivityLifecycleCallbacks(application);
             Utilitario.updateToken();
 
             permisaoAcesGaleria();
-            inicializaLista();
             buscarDadosUsuario();
         }
 
@@ -149,22 +128,19 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
     protected void onStart() {
         super.onStart();
 
-        progressBar.setVisibility(View.GONE);
-        imgSinc.setImageResource(R.drawable.sincnot);
-        getFilaDeEspera();
-
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            return;
+        if( Utilitario.verifiacrAutencicao(act)) {
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            if (!task.isSuccessful()) {
+                                return;
+                            }
+                            String token = task.getResult().getToken();
+                            setarTokenUsuario(token);
                         }
-                        String token = task.getResult().getToken();
-                        setarTokenUsuario(token);
-                    }
-                });
-
+                    });
+        }
     }
 
     @Override
@@ -194,14 +170,12 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_update) {
-            dialogAtualizarFila();
+            MudarTelaController.irParaAtividade(false,this);
             return true;
         }
 
@@ -339,8 +313,6 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
                     FirebaseAuth.getInstance().signOut();
                     Utilitario.verifiacrAutencicao(act);
                 }
-
-
             }
         });
     }
@@ -371,13 +343,6 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
             e.printStackTrace();
         }
 
-    }
-
-    public void inicializaLista(){
-
-        listQuantidade.add("1"); listQuantidade.add("2"); listQuantidade.add("3"); listQuantidade.add("4"); listQuantidade.add("5"); listQuantidade.add("6");
-        listTempo.add("10min"); listTempo.add("20min"); listTempo.add("30min"); listTempo.add("40min"); listTempo.add("50min");
-        listTempo.add("1h"); listTempo.add("1h:15min"); listTempo.add("1h:30min"); listTempo.add("1h:45min"); listTempo.add("2h"); listTempo.add("Mais 2 horas"); listTempo.add("Fechar");
     }
 
     public void permisaoAcesGaleria() {
@@ -415,213 +380,6 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
     public void irParaServicos(View v){
         Intent mudarTela = new Intent(getApplicationContext(),ServicosActivity.class);
         startActivity(mudarTela);
-    }
-
-    public void getFilaDeEspera(){
-
-            FirebaseFirestore.getInstance().collection("Fila")
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-
-                            if (e != null) {
-                                return;
-                            }
-
-                            List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
-
-                            if (!docs.isEmpty()) {
-
-                                for (DocumentSnapshot doc : docs) {
-
-                                    Fila fila = doc.toObject(Fila.class);
-
-                                    txtQuantidadeEspera.setText("" + fila.getClientesEsperando());
-                                    txtTempoEspera.setText("" + fila.getTempoDeEspera());
-
-                                    switch (fila.getClientesEsperando()) {
-                                        case 1:
-
-                                            imgClientesAguardando.setImageResource(R.drawable.espera1);
-                                            imgClientesAguardando.getLayoutParams().width = 150;
-                                            imgClientesAguardando.getLayoutParams().height = 150;
-
-                                            break;
-                                        case 2:
-
-                                            imgClientesAguardando.setImageResource(R.drawable.espera2);
-                                            imgClientesAguardando.getLayoutParams().width = 150;
-                                            imgClientesAguardando.getLayoutParams().height = 150;
-
-                                            break;
-
-                                        case 3:
-
-                                            imgClientesAguardando.setImageResource(R.drawable.espera3);
-                                            imgClientesAguardando.getLayoutParams().width = 250;
-                                            imgClientesAguardando.getLayoutParams().height = 150;
-
-                                            break;
-
-                                        case 4:
-                                            imgClientesAguardando.setImageResource(R.drawable.espera4);
-                                            imgClientesAguardando.getLayoutParams().width = 250;
-                                            imgClientesAguardando.getLayoutParams().height = 150;
-
-                                            break;
-
-                                        case 5:
-                                            imgClientesAguardando.setImageResource(R.drawable.espera5);
-                                            imgClientesAguardando.getLayoutParams().width = 300;
-                                            imgClientesAguardando.getLayoutParams().height = 150;
-
-                                            break;
-
-                                        case 6:
-                                            imgClientesAguardando.setImageResource(R.drawable.espera6);
-                                            imgClientesAguardando.getLayoutParams().width = 300;
-                                            imgClientesAguardando.getLayoutParams().height = 150;
-
-                                            break;
-                                    }
-
-                                    imgSinc.setImageResource(R.drawable.sincok);
-                                }
-                            }
-
-                        }
-                    });
-
-
-            //imgSinc.setImageResource(R.drawable.sincnot);
-            //imgClientesAguardando.setImageResource(R.drawable.cortando);
-            //txtQuantidadeEspera.setText("");
-            //txtTempoEspera.setText("");
-
-    }
-
-    public void atualizarFilaDeEspera(View v){
-
-        progressBar.setVisibility(View.VISIBLE);
-
-        Handler handle = new Handler();
-        handle.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getFilaDeEspera();
-                progressBar.setVisibility(View.GONE);
-            }
-        }, 3000);
-    }
-
-    private void dialogAtualizarFila() {
-
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.layout_atualizar_fila,null);
-        view.setBackgroundColor(Color.parseColor("#615232"));
-
-        spQuantidade = view.findViewById(R.id.spQuantidade);
-        SpinnerAdapter adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listQuantidade);
-        ((ArrayAdapter) adapter).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spQuantidade.setAdapter(adapter);
-
-        spTempo = view.findViewById(R.id.spTempo);
-        SpinnerAdapter adapter1 = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listTempo);
-        ((ArrayAdapter) adapter1).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spTempo.setAdapter(adapter1);
-
-        Button btnSalvar = view.findViewById(R.id.btnLogar);
-        btnSalvar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                try{
-
-                    String quant = (String) spQuantidade.getSelectedItem();
-                    tempo = (String) spTempo.getSelectedItem();
-
-                    if(tempo.equalsIgnoreCase("Fechar")) {
-                        quantidade = 0;
-                    }else {
-                        quantidade = Integer.parseInt(quant);
-                    }
-
-                }catch (Exception e){
-
-                    AlertaUtils.dialogSimples("Ocorreu um erro de conversão",act);
-                    alerta.dismiss();
-                    return;
-                }
-
-                    FirebaseFirestore.getInstance().collection("Fila").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                @Override
-                                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-
-                                    if (e != null) {
-
-                                        AlertaUtils.dialogSimples("Ocorreu um erro de sincronização",act);
-                                        alerta.dismiss();
-                                        return;
-                                    }
-
-                                    docs = queryDocumentSnapshots.getDocuments();
-                                    atualizar();
-
-                                }
-                            });
-
-
-            }
-        });
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setIcon(R.drawable.logo250);
-        builder.setView(view);
-
-        alerta = builder.create();
-        alerta.show();
-
-    }
-
-    public void atualizar(){
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        DocumentReference noteRef = db.collection("Fila")
-                .document(docs.get(0).getId());
-
-        if(quantidade > 0){
-
-            noteRef.update("clientesEsperando",quantidade,"tempoDeEspera",tempo)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-
-                            if(task.isSuccessful()){
-
-                            }
-
-                            alerta.dismiss();
-                        }
-                    });
-
-        }else {
-
-            noteRef.update("clientesEsperando",0,"tempoDeEspera","Fechado")
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-
-                            if(task.isSuccessful()){
-
-                            }
-
-                            alerta.dismiss();
-                        }
-                    });
-
-        }
-
     }
 
 }

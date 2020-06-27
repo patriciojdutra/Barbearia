@@ -161,7 +161,12 @@ public class CarrinhoActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         AlertaUtils.getDialog().dismiss();
-                        AlertaUtils.dialogSimples(e.getMessage(),act);
+                        AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }, act);
                     }
                 });
 

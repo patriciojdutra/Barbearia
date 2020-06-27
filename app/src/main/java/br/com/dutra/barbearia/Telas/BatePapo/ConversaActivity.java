@@ -3,6 +3,7 @@ package br.com.dutra.barbearia.Telas.BatePapo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -60,7 +61,12 @@ public class ConversaActivity extends AppCompatActivity {
 
         if(usuarioSelecionado == null){
 
-            AlertaUtils.dialogSimples("Usuario não encontrado!",this);
+            AlertaUtils.dialogSimples("Usuario não encontrado!", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, this);
 
         }else{
             buscarDadosUsuario();

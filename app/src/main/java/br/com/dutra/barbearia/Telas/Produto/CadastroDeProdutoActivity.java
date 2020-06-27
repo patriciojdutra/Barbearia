@@ -148,7 +148,12 @@ public class CadastroDeProdutoActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
 
                         dialog.dismiss();
-                        AlertaUtils.dialogSimples("Erro ao salvar produto",act);
+                        AlertaUtils.dialogSimples("Erro ao salvar produto", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }, act);
 
                     }
                 });

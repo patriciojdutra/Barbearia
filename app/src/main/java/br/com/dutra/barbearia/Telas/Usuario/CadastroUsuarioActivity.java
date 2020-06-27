@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -19,13 +20,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.fragment.app.DialogFragment;
 import br.com.dutra.barbearia.Modelo.Usuario.Usuario;
 import br.com.dutra.barbearia.R;
 import br.com.dutra.barbearia.Telas.Sistema.DashBoardActivity;
 import br.com.dutra.barbearia.Utilidades.AlertaUtils;
+import br.com.dutra.barbearia.Utilidades.MyDialog;
+import br.com.dutra.barbearia.Utilidades.Utilitario;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -52,26 +58,20 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     private static final int IMAGE_GALLERY_REQUEST = 1;
     private ImageView imgFoto;
     private EditText edtNome;
-    private EditText edtSobrenome;
     private EditText edtCelular;
     private EditText edtDataDeNascimento;
     private EditText edtUserLogin;
     private EditText edtSenha;
-    private EditText edtConfSenha;
     private EditText edtCpfOuCnpj;
     private Uri uriDaImagemSelecionada = null;
     private Activity act = this;
-    MenuItem btnSalvar;
+    private Button btnSalvar;
     MenuItem btnAtualizar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro_de_usuario);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
 
         associacaoDosComponentes();
         eventoClick();
@@ -84,31 +84,10 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_cadastro, menu);
-        btnSalvar = menu.findItem(R.id.action_salvar);
         btnAtualizar = menu.findItem(R.id.action_atualizar);
         btnAtualizar.setVisible(false);
 
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if(id == R.id.action_salvar){
-            if(validacaoCadastro()) {
-                cadastraUsuarioNoServidor();
-            }
-        }
-
-        if(id == R.id.action_atualizar){
-            if(validacaoAtualizacao()) {
-                saveUserInFirebase();
-            }
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -126,13 +105,20 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
         imgFoto = (ImageView)findViewById(R.id.imgFoto);
         edtNome = (EditText)findViewById(R.id.edtNome);
-        edtSobrenome = (EditText)findViewById(R.id.edtSobrenome);
         edtCelular = (EditText)findViewById(R.id.edtCelular);
         edtDataDeNascimento = (EditText)findViewById(R.id.edtDataDeNascimento);
         edtUserLogin = (EditText)findViewById(R.id.edtUserlogin);
         edtSenha = (EditText)findViewById(R.id.edtSenha);
-        edtConfSenha = (EditText)findViewById(R.id.edtConfSenha);
         edtCpfOuCnpj = (EditText)findViewById(R.id.edtCpfOuCnpj);
+        btnSalvar = (Button) findViewById(R.id.btnSalvar);
+
+    }
+
+    public void mostrarDialog(View v){
+
+    }
+
+    public void doPositiveClick(){
 
     }
 
@@ -149,20 +135,28 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     public boolean validacaoCadastro(){
 
         String nome = edtNome.getText().toString();
-        String sobrenome = edtSobrenome.getText().toString();
         String celular = edtCelular.getText().toString();
         String DataNascimento = edtDataDeNascimento.getText().toString();
         String UserLogin = edtUserLogin.getText().toString();
         String senha = edtSenha.getText().toString();
-        String confirmaSenha = edtConfSenha.getText().toString();
 
         if(uriDaImagemSelecionada == null){
-            AlertaUtils.dialogSimples("Adicione uma foto para seu perfil ",act);
+            AlertaUtils.dialogSimples("Adicione uma foto para seu perfil ", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
             return false;
         }
 
         if(nome.length()<1){
-            AlertaUtils.dialogSimples("Nome não pode ser vazio",act);
+            AlertaUtils.dialogSimples("Nome não pode ser vazio", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
             return false;
         }
 
@@ -172,28 +166,41 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     public boolean validacaoAtualizacao(){
 
         String nome = edtNome.getText().toString();
-        String sobrenome = edtSobrenome.getText().toString();
         String celular = edtCelular.getText().toString();
         String DataNascimento = edtDataDeNascimento.getText().toString();
         String UserLogin = edtUserLogin.getText().toString();
         String senha = edtSenha.getText().toString();
-        String confirmaSenha = edtConfSenha.getText().toString();
         String cpfOuCnpj = edtCpfOuCnpj.getText().toString();
 
         if(cpfOuCnpj.isEmpty()){
-            AlertaUtils.dialogSimples("Informe seu CNPJ/CPF",act);
+            AlertaUtils.dialogSimples("Informe seu CNPJ/CPF", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
             edtCpfOuCnpj.setHintTextColor(Color.RED);
             return false;
         }
 
         if(cpfOuCnpj.length() != 11 && cpfOuCnpj.length() != 14){
-            AlertaUtils.dialogSimples("O CNPJ/CPF informado é inválido!",act);
+            AlertaUtils.dialogSimples("O CNPJ/CPF informado é inválido!", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
             edtCpfOuCnpj.setTextColor(Color.RED);
             return false;
         }
 
         if(nome.length()<1){
-            AlertaUtils.dialogSimples("Nome não pode ser vazio",act);
+            AlertaUtils.dialogSimples("Nome não pode ser vazio", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
             return false;
         }
 
@@ -221,7 +228,12 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
 
                         AlertaUtils.getDialog().dismiss();
-                        AlertaUtils.dialogSimples(e.getMessage(),act);
+                        AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }, act);
                     }
                 });
     }
@@ -238,7 +250,12 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                             saveUserInFirebase();
                         } else {
                             AlertaUtils.getDialog().dismiss();
-                            AlertaUtils.dialogSimples(task.getException().getMessage(),act);
+                            AlertaUtils.dialogSimples(task.getException().getMessage(), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            }, act);
                         }
                     }
                 })
@@ -246,7 +263,12 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         AlertaUtils.getDialog().dismiss();
-                        AlertaUtils.dialogSimples(e.getMessage(),act);
+                        AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }, act);
                     }
                 });
 
@@ -256,7 +278,6 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
         String uid = FirebaseAuth.getInstance().getUid();
         String nome = edtNome.getText().toString();
-        String sobrenome = edtSobrenome.getText().toString();
         String celular = edtCelular.getText().toString();
         String dataNascimento = edtDataDeNascimento.getText().toString();
         String userLogin = edtUserLogin.getText().toString();
@@ -267,7 +288,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
             AlertaUtils.dialogLoad(act);
         }
 
-        final Usuario user = new Usuario(uid,nome,sobrenome,celular,dataNascimento,senha,userLogin);
+        final Usuario user = new Usuario(uid,nome,celular,dataNascimento,senha,userLogin);
         user.setCpfouCnpj(cpfOuCnpj);
         usuario = user;
 
@@ -290,7 +311,12 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         AlertaUtils.getDialog().dismiss();
-                        AlertaUtils.dialogSimples(e.getMessage(),act);
+                        AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }, act);
                     }
                 });
     }
@@ -315,7 +341,12 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         AlertaUtils.getDialog().dismiss();
-                        AlertaUtils.dialogSimples(e.getMessage(),act);
+                        AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }, act);
                     }
                 });
 
@@ -370,7 +401,12 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         AlertaUtils.getDialog().dismiss();
-                        AlertaUtils.dialogSimples(e.getMessage(),act);
+                        AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }, act);
                     }
                 });
     }
@@ -378,21 +414,22 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     public void setarDadosUsuario(Usuario usuario){
 
         btnAtualizar.setVisible(true);
-        btnSalvar.setVisible(false);
         edtNome.setText(usuario.getNome());
-        edtSobrenome.setText(usuario.getSobrenome());
         edtCelular.setText(usuario.getCelular());
         edtDataDeNascimento.setText(usuario.getDataDeNascimento());
         edtUserLogin.setText(usuario.getUserLogin());
         edtSenha.setText(usuario.getSenha());
         edtSenha.setEnabled(false);
-        edtConfSenha.setText(usuario.getSenha());
-        edtConfSenha.setEnabled(false);
         edtCpfOuCnpj.setText(usuario.getCpfouCnpj());
 
         if(usuario.getCpfouCnpj() == null || usuario.getCpfouCnpj().isEmpty()) {
             edtCpfOuCnpj.requestFocus();
-            AlertaUtils.dialogSimples("Informe seu CNPJ/CPF para finalizar seu cadastro", act);
+            AlertaUtils.dialogSimples("Informe seu CNPJ/CPF para finalizar seu cadastro", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
         }
 
     }

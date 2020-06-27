@@ -26,8 +26,6 @@ public class GerenciamentoActivity extends AppCompatActivity {
 
     }
 
-
-
     public void Cliente(View v){
 
         Intent it = new Intent(this, PainelInfoclientesActivity.class);

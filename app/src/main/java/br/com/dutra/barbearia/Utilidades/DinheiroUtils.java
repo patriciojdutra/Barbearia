@@ -19,4 +19,18 @@ public class DinheiroUtils {
         return dinheiroformatado;
 
     }
+
+    public static double converteStrigEmDouble(String sValor){
+
+        try {
+            sValor = sValor.replace(".", "");
+            sValor = sValor.replace(",", ".");
+            double dValor = Double.parseDouble(sValor);
+            return dValor;
+        }catch (Exception e){
+            return 0;
+        }
+
+    }
+
 }
