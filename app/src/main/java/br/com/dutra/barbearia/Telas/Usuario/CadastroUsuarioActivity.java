@@ -130,6 +130,16 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                 carregarFotoUsuario();
             }
         });
+
+        btnSalvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(validacaoCadastro()) {
+                    cadastraUsuarioNoServidor();
+                }
+            }
+        });
+
     }
 
     public boolean validacaoCadastro(){

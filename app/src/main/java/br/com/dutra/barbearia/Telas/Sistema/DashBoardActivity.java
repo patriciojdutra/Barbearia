@@ -233,9 +233,11 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
         }
 
         if (id == R.id.nav_meu_perfil) {
-            Intent mudartela = new Intent(getApplicationContext(), CadastroUsuarioActivity.class);
-            mudartela.putExtra("solicitacao","finalizarCadastro");
-            startActivity(mudartela);
+
+            MudarTelaController.irParaTelaDeLogin(false,act);
+//            Intent mudartela = new Intent(getApplicationContext(), CadastroUsuarioActivity.class);
+//            mudartela.putExtra("solicitacao","finalizarCadastro");
+//            startActivity(mudartela);
         }
 
 //        if (id == R.id.nav_reclame_aqui) {
