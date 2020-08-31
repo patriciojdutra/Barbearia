@@ -5,9 +5,9 @@
     <application
         android:name=".Configuracoes.ConfiguracaoApplication"
         android:allowBackup="true"
-        android:icon="@drawable/logonormal"
+        android:icon="@drawable/logo_black_100"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/logonormal"
+        android:roundIcon="@drawable/logo_black_100"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity

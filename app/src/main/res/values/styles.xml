@@ -18,5 +18,11 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="bottombar" parent="AppTheme" >
+        <item name="android:colorPrimary">@color/branco</item>
+        <item name="android:colorAccent">@color/branco</item>
+        <item name="android:colorPrimaryDark">@color/branco</item>
+
+    </style>
 
 </resources>

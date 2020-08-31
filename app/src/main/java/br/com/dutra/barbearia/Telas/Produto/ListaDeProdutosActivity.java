@@ -4,18 +4,24 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import br.com.dutra.barbearia.Adaptadores.AdaptadorListaDeProdutos;
+import br.com.dutra.barbearia.Controllers.MudarTelaController;
 import br.com.dutra.barbearia.Modelo.Produto;
 import br.com.dutra.barbearia.R;
 import br.com.dutra.barbearia.Utilidades.AlertaUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.type.Color;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -35,6 +41,29 @@ public class ListaDeProdutosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_de_produtos);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView2);
+        bottomNavigationView.setSelectedItemId(R.id.action_cabelos);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                if(item.getItemId() == R.id.action_cabelos) {
+
+
+                }else if(item.getItemId() == R.id.action_roupas) {
+
+                }else if(item.getItemId() == R.id.action_bolsas) {
+                }else if(item.getItemId() == R.id.action_brincos) {
+
+                }else if(item.getItemId() == R.id.action_outros) {
+
+                }
+
+                return true;
+            }
+        });
 
         associacao();
         baixarDados();

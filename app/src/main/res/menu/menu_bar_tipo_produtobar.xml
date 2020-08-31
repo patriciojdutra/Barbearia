@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_cabelos"
+        android:icon="@drawable/cabelo_white"
+        android:title="cabelos"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_roupas"
+        android:icon="@drawable/vestido_white"
+        android:title="Roupas"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_bolsas"
+        android:icon="@drawable/bolsa_white"
+        android:title="Bolsas"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_brincos"
+        android:icon="@drawable/brincos"
+        android:title="Brincos"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_outros"
+        android:icon="@drawable/outros_white"
+        android:title="Outros"
+        app:showAsAction="always" />
+
+</menu>

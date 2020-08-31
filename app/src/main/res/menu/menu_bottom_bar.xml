@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_loja"
+        android:icon="@drawable/ic_baseline_shopping_basket_24"
+        android:title="Loja"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_servicos"
+        android:icon="@drawable/tesoura"
+        android:title="serviços"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_agendamento"
+        android:icon="@drawable/baseline_today_black_24"
+        android:title="Agendamento"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_enderecos"
+        android:icon="@drawable/baseline_location_on_black_24"
+        android:title="Endereço"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_contatos"
+        android:icon="@drawable/ic_baseline_perm_phone_msg_24"
+        android:title="Contatos"
+        app:showAsAction="always" />
+
+</menu>

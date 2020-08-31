@@ -5,12 +5,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
-import android.os.Handler;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -24,7 +21,7 @@ import android.view.MenuItem;
 
 import br.com.dutra.barbearia.Configuracoes.ConfiguracaoApplication;
 import br.com.dutra.barbearia.Controllers.MudarTelaController;
-import br.com.dutra.barbearia.Modelo.Fila;
+import br.com.dutra.barbearia.Modelo.Banner;
 import br.com.dutra.barbearia.Modelo.Usuario.Usuario;
 import br.com.dutra.barbearia.R;
 import br.com.dutra.barbearia.Telas.Agendamento.AgendaActivity;
@@ -32,38 +29,34 @@ import br.com.dutra.barbearia.Telas.Agendamento.MeusAgendamentosActivity;
 import br.com.dutra.barbearia.Telas.BatePapo.ListaDeConversasActivity;
 import br.com.dutra.barbearia.Telas.Carrinho.CarrinhoActivity;
 import br.com.dutra.barbearia.Telas.Local.MapsActivity;
-import br.com.dutra.barbearia.Telas.Usuario.CadastroUsuarioActivity;
 import br.com.dutra.barbearia.Utilidades.AlertaUtils;
 import br.com.dutra.barbearia.Utilidades.Utilitario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.smarteist.autoimageslider.SliderLayout;
+import com.smarteist.autoimageslider.SliderView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,8 +64,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -87,9 +78,16 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
     private CircleImageView imgDoUsuarioNoMenu;
     Activity act = this;
 
+    LinearLayout linearScroll;
+
     MenuItem iconeGerenciamento;
     MenuItem iconeUpdate;
     MenuItem iconeCarrinho;
+
+    private List<Banner> listaDeBanner = new ArrayList<>();
+
+
+    SliderLayout sliderLayout;
 
 
     @Override
@@ -107,10 +105,32 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                if(item.getItemId() == R.id.action_loja) {
+                    MudarTelaController.irParaLoja(false, act);
+                }else if(item.getItemId() == R.id.action_servicos) {
+                    MudarTelaController.irParaServicos(false, act);
+                }else if(item.getItemId() == R.id.action_agendamento) {
+                    MudarTelaController.irParaAgendamento(false, act);
+                }else if(item.getItemId() == R.id.action_enderecos) {
+                    MudarTelaController.irParaEnderecos(false, act);
+                }else if(item.getItemId() == R.id.action_contatos) {
+                    MudarTelaController.irParaContatos(false, act);
+                }
+
+                return true;
+            }
+        });
+
         View headerView = navigationView.getHeaderView(0);
         txtNomeNoMenu = (TextView) headerView.findViewById(R.id.txtNomeNoMenu);
         imgDoUsuarioNoMenu = (CircleImageView)headerView.findViewById(R.id.imgFoto);
 
+        linearScroll = findViewById(R.id.linearScroll);
 
         if( Utilitario.verifiacrAutencicao(act)){
 
@@ -121,6 +141,12 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
             permisaoAcesGaleria();
             buscarDadosUsuario();
         }
+
+        sliderLayout = findViewById(R.id.imageSlider);
+        sliderLayout.setIndicatorAnimation(SliderLayout.Animations.WORM); //set indicator animation by using SliderLayout.Animations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+        sliderLayout.setScrollTimeInSec(5); //set scroll delay in seconds :
+
+        baixarDadosDoBanner();
 
     }
 
@@ -360,29 +386,61 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
         }
     }
 
-    public void irParaPerfil(View v){
+    public void baixarDadosDoBanner(){
 
-        Intent mudarTela = new Intent(getApplicationContext(), ListaDeConversasActivity.class);
-        startActivity(mudarTela);
+        AlertaUtils.dialogLoad(act);
+
+        FirebaseFirestore.getInstance().collection("Banner").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+
+                        if (!docs.isEmpty()) {
+
+                            for (DocumentSnapshot doc : docs) {
+                                Banner banner = doc.toObject(Banner.class);
+                                listaDeBanner.add(banner);
+                            }
+                        }
+
+                        AlertaUtils.getDialog().dismiss();
+
+                        setarBanner();
+                    }
+                });
 
     }
 
-    public void irParaAgenda(View v){
+    private void setarBanner() {
 
-        Intent mudarTela = new Intent(getApplicationContext(), AgendaActivity.class);
-        startActivity(mudarTela);
+        for (int i = 0; i < listaDeBanner.size() ; i++) {
 
+            LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.adaptador_card_style_1,null);
+            linearScroll.addView(linearLayout);
+
+            LinearLayout linearLayout2 = (LinearLayout) getLayoutInflater().inflate(R.layout.adaptador_card_style_2,null);
+            linearScroll.addView(linearLayout2);
+
+
+            SliderView sliderView = new SliderView(this);
+            sliderView.setDescription(listaDeBanner.get(i).getDescricao());
+            sliderView.setImageUrl(listaDeBanner.get(i).getUrl());
+            sliderView.setImageScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+            final int finalI = i;
+            sliderView.setOnSliderClickListener(new SliderView.OnSliderClickListener() {
+                @Override
+                public void onSliderClick(SliderView sliderView) {
+                    Toast.makeText(act, "This is slider " + (finalI + 1), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            //at last add this view in your layout :
+            sliderLayout.addSliderView(sliderView);
+
+        }
     }
-
-    public void irParaLocalizacao(View v){
-        Intent mudarTela = new Intent(getApplicationContext(),MapsActivity.class);
-        startActivity(mudarTela);
-    }
-
-    public void irParaServicos(View v){
-        Intent mudarTela = new Intent(getApplicationContext(),ServicosActivity.class);
-        startActivity(mudarTela);
-    }
-
 }
 
