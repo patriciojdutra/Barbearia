@@ -18,13 +18,12 @@ public class Usuario implements Serializable {
 
     public Usuario() { }
 
-    public Usuario(String uiId, String nome, String celular, String dataDeNascimento, String senha, String userLogin) {
+    public Usuario(String uiId, String nome, String celular, String dataDeNascimento, String senha) {
         this.uiId = uiId;
         this.nome = nome;
         this.celular = celular;
         this.dataDeNascimento = dataDeNascimento;
         this.senha = senha;
-        this.userLogin = userLogin;
     }
 
     public String getUiId() {

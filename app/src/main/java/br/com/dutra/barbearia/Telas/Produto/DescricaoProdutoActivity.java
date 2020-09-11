@@ -136,7 +136,7 @@ public class DescricaoProdutoActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
 
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         AlertaUtils.dialogProdutoAdicionadoaoCarrinhoComSucesso(act);
 
                     }
@@ -145,7 +145,7 @@ public class DescricaoProdutoActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
 
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         AlertaUtils.dialogProdutoNãoAdicionadoAoCarrinho(e.getMessage(),act);
 
                     }

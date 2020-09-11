@@ -182,7 +182,7 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         //AlertaUtils.dialogSimples(e.getMessage(),act);
                     }
                 });
@@ -199,12 +199,12 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
 
                 endereco = documentSnapshot.toObject(Endereco.class);
                 verificarCadastroDoEndereco(endereco);
-                AlertaUtils.getDialog().dismiss();
+                AlertaUtils.fecharDialog();
             }})
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                        // AlertaUtils.dialogSimples(e.getMessage(),act);
                     }
                 });
@@ -229,7 +229,7 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         if(alerta!=null)
                             alerta.dismiss();
 
@@ -239,7 +239,7 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         //AlertaUtils.dialogSimples(e.getMessage(),act);
                     }
                 });

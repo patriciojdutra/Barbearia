@@ -371,7 +371,7 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
             final File localFile = File.createTempFile("images", "jpeg");
 
             StorageReference pathReference = FirebaseStorage.getInstance().getReference();
-            pathReference = pathReference.child("/images/usuarios/"+usuarioLogado.getUserLogin());
+            pathReference = pathReference.child("/images/usuarios/"+usuarioLogado.getCelular());
 
             pathReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
@@ -469,7 +469,7 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
                             }
                         }
 
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
 
                         setarConteudo();
                     }

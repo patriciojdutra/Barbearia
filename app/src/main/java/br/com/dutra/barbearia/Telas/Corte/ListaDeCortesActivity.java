@@ -80,7 +80,7 @@ ListaDeCortesActivity extends AppCompatActivity {
                         }
 
                         carregarlista();
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
 
                     }
                 });

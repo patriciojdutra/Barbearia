@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import br.com.dutra.barbearia.Controllers.MudarTelaController;
@@ -27,6 +28,8 @@ public class AlertaUtils {
 
     public static void dialogSimples(String txt, DialogInterface.OnClickListener clickListener, Activity act) {
 
+        fecharDialog();
+
         AlertDialog alerta;
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         builder.setTitle("Aviso");
@@ -40,7 +43,40 @@ public class AlertaUtils {
         alerta.show();
     }
 
+    public static void dialogDuplo(Activity act, String txt, String txtBtnPositivo, String txtBtnNegativo, DialogInterface.OnClickListener clickListenerPositivo, DialogInterface.OnClickListener clickListenerNegativo) {
+
+        fecharDialog();
+
+        AlertDialog alerta;
+        AlertDialog.Builder builder = new AlertDialog.Builder(act);
+        builder.setCancelable(false);
+        builder.setMessage(txt);
+        builder.setPositiveButton(txtBtnPositivo, clickListenerPositivo);
+        builder.setNegativeButton(txtBtnNegativo, clickListenerNegativo);
+
+        alerta = builder.create();
+        alerta.show();
+    }
+
+    public static void dialogCustomizado(Activity act, View view, String txtBtnPositivo, String txtBtnNegativo, DialogInterface.OnClickListener clickListenerPositivo, DialogInterface.OnClickListener clickListenerNegativo) {
+
+        fecharDialog();
+
+        AlertDialog alerta;
+        AlertDialog.Builder builder = new AlertDialog.Builder(act);
+        builder.setCancelable(false);
+        builder.setView(view);
+        builder.setPositiveButton(txtBtnPositivo, clickListenerPositivo);
+        builder.setNegativeButton(txtBtnNegativo, clickListenerNegativo);
+
+        //cria o AlertDialog
+        alerta = builder.create();
+        alerta.show();
+    }
+
     public static void dialogLoad(Activity act) {
+
+        fecharDialog();
 
         alert = new AlertDialog.Builder(act);
         alert.setTitle("Aguarde um momento...");
@@ -60,6 +96,8 @@ public class AlertaUtils {
     }
 
     public static void dialogConfirmacaoLogout(final Activity act) {
+
+        fecharDialog();
 
         AlertDialog alerta;
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
@@ -86,6 +124,8 @@ public class AlertaUtils {
 
     public static void dialogProdutoAdicionadoaoCarrinhoComSucesso(final Activity act) {
 
+        fecharDialog();
+
         AlertDialog alerta;
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         builder.setTitle("Sucesso");
@@ -110,6 +150,8 @@ public class AlertaUtils {
     }
 
     public static void dialogProdutoNãoAdicionadoAoCarrinho(String erro, final Activity act) {
+
+        fecharDialog();
 
         AlertDialog alerta;
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
@@ -146,6 +188,14 @@ public class AlertaUtils {
 
         alerta = builder.create();
         alerta.show();
+    }
+
+    public static void fecharDialog(){
+
+        try{
+            getDialog().dismiss();
+        }catch (Exception e){}
+
     }
 
 }

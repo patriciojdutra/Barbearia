@@ -25,4 +25,8 @@
 
     </style>
 
+    <style name="estiloParaEdtText" parent="AppTheme">
+        <item name="android:textCursorDrawable">@color/branco</item>
+    </style>
+
 </resources>

@@ -99,7 +99,7 @@ public class ListaDeProdutosActivity extends AppCompatActivity {
                             }
                         }
 
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         carregarLista();
                     }
                 });

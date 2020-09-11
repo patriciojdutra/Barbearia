@@ -23,12 +23,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
+import br.com.dutra.barbearia.Controllers.MudarTelaController;
+import br.com.dutra.barbearia.Modelo.Produto;
 import br.com.dutra.barbearia.Modelo.Usuario.Usuario;
 import br.com.dutra.barbearia.R;
 import br.com.dutra.barbearia.Telas.Sistema.DashBoardActivity;
 import br.com.dutra.barbearia.Utilidades.AlertaUtils;
+import br.com.dutra.barbearia.Utilidades.FirebaseUtils;
 import br.com.dutra.barbearia.Utilidades.MyDialog;
 import br.com.dutra.barbearia.Utilidades.Utilitario;
 
@@ -36,12 +41,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskExecutors;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -51,6 +63,8 @@ import com.squareup.picasso.Target;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class CadastroUsuarioActivity extends AppCompatActivity {
 
@@ -60,13 +74,16 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     private EditText edtNome;
     private EditText edtCelular;
     private EditText edtDataDeNascimento;
-    private EditText edtUserLogin;
     private EditText edtSenha;
     private EditText edtCpfOuCnpj;
     private Uri uriDaImagemSelecionada = null;
     private Activity act = this;
     private Button btnSalvar;
     MenuItem btnAtualizar;
+
+    private String mVerificationId;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,22 +126,20 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         edtNome = (EditText)findViewById(R.id.edtNome);
         edtCelular = (EditText)findViewById(R.id.edtCelular);
         edtDataDeNascimento = (EditText)findViewById(R.id.edtDataDeNascimento);
-        edtUserLogin = new EditText(this);
         edtSenha = (EditText)findViewById(R.id.edtSenha);
         edtCpfOuCnpj = (EditText)findViewById(R.id.edtCpfOuCnpj);
         btnSalvar = (Button) findViewById(R.id.btnSalvar);
 
     }
 
-    public void mostrarDialog(View v){
-
-    }
-
-    public void doPositiveClick(){
-
-    }
-
     public void eventoClick(){
+
+        edtDataDeNascimento.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utilitario.setDataTextView(edtDataDeNascimento, act);
+            }
+        });
 
         imgFoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,16 +152,58 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
-
                 if(validacaoCadastro()) {
-                    cadastraUsuarioNoServidor();
-                }
 
+                    AlertaUtils.dialogSimples("Será enviando um SMS com o codigo de confirmação ", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            String celular = edtCelular.getText().toString();
+                            verificarSeTelefoneJaExiste(celular);
+
+                        }
+                    }, act);
+                }
+            }
+        });
+    }
+
+    public void verificarSeTelefoneJaExiste(String celular){
+
+        AlertaUtils.dialogLoad(act);
+
+        FirebaseFirestore.getInstance().collection("Usuario")
+                .whereEqualTo("celular",celular)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+
+                        if (docs.isEmpty()) {
+                            verificarTelefone(celular);
+                        }else {
+                            AlertaUtils.dialogSimples("Celular já cadastrado, acesse sua conta com seu número de telefone", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    MudarTelaController.irParaDashboard(true,act);
+                                }
+                            }, act);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                AlertaUtils.fecharDialog();
+                AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) { }
+                }, act);
 
             }
         });
-
     }
 
     public boolean validacaoCadastro(){
@@ -214,7 +271,6 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         String nome = edtNome.getText().toString();
         String celular = edtCelular.getText().toString();
         String DataNascimento = edtDataDeNascimento.getText().toString();
-        String UserLogin = edtUserLogin.getText().toString();
         String senha = edtSenha.getText().toString();
         String cpfOuCnpj = edtCpfOuCnpj.getText().toString();
 
@@ -253,80 +309,12 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         return true;
     }
 
-    private void cadastraUsuarioNoServidor(){
-
-        String UserLogin = edtUserLogin.getText().toString();
-        String senha = edtSenha.getText().toString();
-
-        AlertaUtils.dialogLoad(act);
-
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(UserLogin, senha)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            logarUsuario();
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                        AlertaUtils.getDialog().dismiss();
-                        AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        }, act);
-                    }
-                });
-    }
-
-    public void logarUsuario(){
-
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(edtUserLogin.getText().toString(), edtSenha.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            saveUserInFirebase();
-                        } else {
-                            AlertaUtils.getDialog().dismiss();
-                            AlertaUtils.dialogSimples(task.getException().getMessage(), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-
-                                }
-                            }, act);
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        AlertaUtils.getDialog().dismiss();
-                        AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        }, act);
-                    }
-                });
-
-    }
-
     private void saveUserInFirebase() {
 
         String uid = FirebaseAuth.getInstance().getUid();
         String nome = edtNome.getText().toString();
         String celular = edtCelular.getText().toString();
         String dataNascimento = edtDataDeNascimento.getText().toString();
-        String userLogin = edtUserLogin.getText().toString();
         String senha = edtSenha.getText().toString();
         String cpfOuCnpj = edtCpfOuCnpj.getText().toString();
 
@@ -334,7 +322,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
             AlertaUtils.dialogLoad(act);
         }
 
-        final Usuario user = new Usuario(uid,nome,celular,dataNascimento,senha,userLogin);
+        final Usuario user = new Usuario(uid,nome,celular,dataNascimento,senha);
         user.setCpfouCnpj(cpfOuCnpj);
         usuario = user;
 
@@ -356,7 +344,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -369,7 +357,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
     public void enviarImagemDoUsuarioParaServidor(){
 
-        final StorageReference ref = FirebaseStorage.getInstance().getReference("/images/usuarios/" + edtUserLogin.getText());
+        final StorageReference ref = FirebaseStorage.getInstance().getReference("/images/usuarios/" + edtCelular.getText().toString());
         ref.putFile(uriDaImagemSelecionada)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -386,7 +374,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -417,7 +405,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
             String solicitacao = getIntent().getExtras().getString("solicitacao", "");
             if (solicitacao.equalsIgnoreCase("finalizarCadastro")) {
                 imgFoto.setVisibility(View.GONE);
-                buscarDadosUsuario();
+                buscarDadosUsuario(FirebaseAuth.getInstance().getUid());
             }else {
                 edtCpfOuCnpj.setText("");
                 edtCpfOuCnpj.setVisibility(View.GONE);
@@ -428,33 +416,31 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         }
     }
 
-    public void buscarDadosUsuario(){
-
-        String uId = FirebaseAuth.getInstance().getUid();
+    public void buscarDadosUsuario(String uId){
 
         AlertaUtils.dialogLoad(act);
-        DocumentReference docRef = FirebaseFirestore.getInstance().collection("Usuario").document(uId);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                Usuario user = documentSnapshot.toObject(Usuario.class);
-                setarDadosUsuario(user);
-                AlertaUtils.getDialog().dismiss();
+       new FirebaseUtils<Usuario>().buscarObjetoNoFirebase("Usuario",uId, new OnSuccessListener<DocumentSnapshot>() {
+           @Override
+           public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-            }})
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        AlertaUtils.getDialog().dismiss();
-                        AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+               Usuario user = documentSnapshot.toObject(Usuario.class);
+               setarDadosUsuario(user);
+               AlertaUtils.fecharDialog();
 
-                            }
-                        }, act);
-                    }
-                });
+           }},
+               new OnFailureListener() {
+           @Override
+           public void onFailure(@NonNull Exception e) {
+               AlertaUtils.fecharDialog();
+               AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialogInterface, int i) {
+
+                   }
+               }, act);
+           }
+       } );
     }
 
     public void setarDadosUsuario(Usuario usuario){
@@ -466,7 +452,6 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         edtNome.setText(usuario.getNome());
         edtCelular.setText(usuario.getCelular());
         edtDataDeNascimento.setText(usuario.getDataDeNascimento());
-        edtUserLogin.setText(usuario.getUserLogin());
         edtSenha.setText(usuario.getSenha());
         edtSenha.setEnabled(false);
         edtCpfOuCnpj.setText(usuario.getCpfouCnpj());
@@ -483,49 +468,6 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
     }
 
-    public void editaImagemDoUsuario() throws IOException {
-
-        //diminue o tamanho da imagem
-        Picasso.get()
-                .load(uriDaImagemSelecionada)
-                .resize(300,300)
-                .centerCrop()
-                .into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap newBitmap, Picasso.LoadedFrom from) {
-
-
-                    }
-
-                    @Override
-                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                    }
-                });
-
-    }
-
-    public void salvaImagemNoApp(Bitmap bitmap) throws IOException {
-
-        //salva a imagem no app
-        String FILENAME = edtNome.getText().toString() + ".png";
-        FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        fos.flush();
-        fos.close();
-
-        //convert imagem para byte
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-    }
-
     public void carregarFotoUsuario() {
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) ==
@@ -539,6 +481,132 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                     new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE },
                     IMAGE_GALLERY_REQUEST);
         }
+    }
+
+    private void verificarTelefone(String celularInformado) {
+
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                "+55" + celularInformado,
+                20,
+                TimeUnit.SECONDS,
+                TaskExecutors.MAIN_THREAD,
+                mCallbacks);
+
+    }
+
+    // verifica o codigo automatico
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        @Override
+        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+
+            String code = phoneAuthCredential.getSmsCode();
+
+            if (code != null) {
+                verificarSMSRecebido(code);
+            }else{
+
+                if(phoneAuthCredential != null) {
+                    signInWithPhoneAuthCredential(phoneAuthCredential);
+                }else {
+                    verificarCodigoManual();
+                }
+            }
+        }
+
+        @Override
+        public void onVerificationFailed(FirebaseException e) {
+            Toast.makeText(act, e.getMessage(), Toast.LENGTH_LONG).show();
+
+            AlertaUtils.fecharDialog();
+
+            AlertaUtils.dialogSimples("Não foi possivel enviar o código, aguarde 2 minutos e tente novamente\n"+e.getMessage(), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) { }
+            },act);
+
+        }
+
+        @Override
+        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            super.onCodeSent(s, forceResendingToken);
+            mVerificationId = s;
+
+            verificarCodigoManual();
+        }
+
+        @Override
+        public void onCodeAutoRetrievalTimeOut(@NonNull String s) {
+            super.onCodeAutoRetrievalTimeOut(s);
+
+            AlertaUtils.dialogSimples(s, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) { }
+            },act);
+
+        }
+    };
+
+    private void verificarCodigoManual(){
+
+        AlertaUtils.fecharDialog();
+
+        View v = (View) getLayoutInflater().inflate(R.layout.modal_verificacao_code_manual,null);
+        EditText editText = v.findViewById(R.id.edtCodigo);
+
+        AlertaUtils.dialogCustomizado(act, v, "Entrar", "Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface positivo, int i) {
+
+                String codigo = editText.getText().toString();
+                verificarSMSRecebido(codigo);
+
+            }
+        }, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface negativo, int i) {
+
+            }
+        });
+
+
+    }
+
+    private void verificarSMSRecebido(String otp) {
+        //creating the credential
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
+
+        //signing the user
+        signInWithPhoneAuthCredential(credential);
+    }
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+
+                            //MudarTelaController.irParaDashboard(true,act);
+                            saveUserInFirebase();
+
+                        } else {
+
+                            //verification unsuccessful.. display an error message
+
+                            String message = "Somthing is wrong, we will fix it soon...";
+
+                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                message = "Invalid code entered...";
+                            }
+
+                            AlertaUtils.dialogSimples(message, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) { }
+                            },act);
+                        }
+                    }
+                });
     }
 
 }

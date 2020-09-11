@@ -96,7 +96,7 @@ public class CarrinhoActivity extends AppCompatActivity {
                             }
                         }
 
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         calcularTotalDeTodosOsProdutos();
                         carregarLista();
                     }
@@ -152,7 +152,7 @@ public class CarrinhoActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
 
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         buscarMeusProdutosNoCarrinho();
 
                     }
@@ -160,7 +160,7 @@ public class CarrinhoActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {

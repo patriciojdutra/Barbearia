@@ -290,13 +290,13 @@ public class AgendaActivity extends AppCompatActivity {
                     txtEndereco.setText(endereco.getRua() + " nº:" + endereco.getNumero());
                 }catch (Exception e){};
 
-                AlertaUtils.getDialog().dismiss();
+                AlertaUtils.fecharDialog();
 
             }})
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -357,7 +357,7 @@ public class AgendaActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
 
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         dialogConfirmacao(atendimento);
 
                     }
@@ -392,7 +392,7 @@ public class AgendaActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                AlertaUtils.getDialog().dismiss();
+                AlertaUtils.fecharDialog();
                 AlertaUtils.dialogSimples("Ocorreu um erro", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -431,13 +431,13 @@ public class AgendaActivity extends AppCompatActivity {
                                 }
                             }
 
-                            AlertaUtils.getDialog().dismiss();
+                            AlertaUtils.fecharDialog();
                             mostrarHorariosDisponiceis();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    AlertaUtils.getDialog().dismiss();
+                    AlertaUtils.fecharDialog();
                     AlertaUtils.dialogSimples("Ocorreu um erro", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -457,7 +457,7 @@ public class AgendaActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         if(alerta!=null)
                             alerta.dismiss();
                         try {
@@ -469,7 +469,7 @@ public class AgendaActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        AlertaUtils.getDialog().dismiss();
+                        AlertaUtils.fecharDialog();
                         AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {

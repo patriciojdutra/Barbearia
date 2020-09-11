@@ -224,7 +224,7 @@ public class AtividadeActivity extends AppCompatActivity {
         new FirebaseUtils<Atividade>().salvarNoFirebase("Atividade", atividade, new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
-                AlertaUtils.getDialog().dismiss();
+                AlertaUtils.fecharDialog();
                 AlertaUtils.dialogSimples("Atividade salva com sucesso", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -235,7 +235,7 @@ public class AtividadeActivity extends AppCompatActivity {
         }, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                AlertaUtils.getDialog().dismiss();
+                AlertaUtils.fecharDialog();
                 AlertaUtils.dialogSimples("Ocorreu um erro", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) { }
@@ -286,7 +286,7 @@ public class AtividadeActivity extends AppCompatActivity {
         new FirebaseUtils<Despesa>().salvarNoFirebase("Despesa", despesa, new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
-                AlertaUtils.getDialog().dismiss();
+                AlertaUtils.fecharDialog();
                 AlertaUtils.dialogSimples("Despesa salva com sucesso", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -297,7 +297,7 @@ public class AtividadeActivity extends AppCompatActivity {
         }, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                AlertaUtils.getDialog().dismiss();
+                AlertaUtils.fecharDialog();
                 AlertaUtils.dialogSimples("Ocorreu um erro", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) { }

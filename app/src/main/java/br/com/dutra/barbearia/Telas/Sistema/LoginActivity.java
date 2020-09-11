@@ -3,19 +3,15 @@ package br.com.dutra.barbearia.Telas.Sistema;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import br.com.dutra.barbearia.Controllers.MudarTelaController;
-import br.com.dutra.barbearia.Telas.Usuario.CadastroUsuarioActivity;
 import br.com.dutra.barbearia.Utilidades.AlertaUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import androidx.annotation.NonNull;
@@ -24,37 +20,42 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import br.com.dutra.barbearia.R;
 import br.com.dutra.barbearia.Utilidades.SharedPreferencesUtils;
 
+import com.google.android.gms.tasks.TaskExecutors;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
 
     private Activity act = this;
-    private EditText edtUsuario;
-    private EditText edtsenha;
+    private EditText edtCelular;
     private Button btnLogar;
     private CheckBox checkBoxLembrarMe;
     private Button btnCriarNovaConta;
     private ImageButton imgBtnGoogle;
     private ImageButton imgBtnFacebook;
 
+    private String mVerificationId;
 
     private AlertDialog.Builder alert;
     private Dialog dialog;
@@ -66,8 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        edtUsuario = (EditText)findViewById(R.id.edtUsuario);
-        edtsenha = (EditText)findViewById(R.id.edtSenha);
+        edtCelular = (EditText)findViewById(R.id.edtCelular);
         btnLogar = (Button)findViewById(R.id.btnLogar);
         checkBoxLembrarMe = (CheckBox)findViewById(R.id.checkBoxLembrarMe);
         btnCriarNovaConta = (Button)findViewById(R.id.btnCriarNovaConta);
@@ -81,8 +81,7 @@ public class LoginActivity extends AppCompatActivity {
     public void init(){
 
         checkBoxLembrarMe.setChecked(SharedPreferencesUtils.buscarBooleanPreferences("lembrarme",act));
-        edtUsuario.setText(SharedPreferencesUtils.buscarStringPreferences("email",act));
-        edtsenha.setText(SharedPreferencesUtils.buscarStringPreferences("senha",act));
+        edtCelular.setText(SharedPreferencesUtils.buscarStringPreferences("celular",act));
 
         btnCriarNovaConta.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,69 +94,73 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String email = edtUsuario.getText().toString();
-                String password = edtsenha.getText().toString();
+                String celular = edtCelular.getText().toString();
 
-                if(validarDadosLogin(email,password)) {
-
-                    AlertaUtils.dialogLoad(act);
-
-                    FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                    AlertaUtils.getDialog().dismiss();
-
-                                    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                    if (user != null) {
-                                        MudarTelaController.irParaDashboard(true,act);
-                                    }
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    AlertaUtils.getDialog().dismiss();
-                                    AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                                        }
-                                    }, act);
-                                }
-                            });
+                if(validarDadosLogin(celular)) {
+                    verificarSeTelefoneJaExiste(celular);
                 }
             }
         });
     }
 
-    public boolean validarDadosLogin(String email, String senha){
+    public void verificarSeTelefoneJaExiste(String celular){
+
+        AlertaUtils.dialogLoad(act);
+
+        FirebaseFirestore.getInstance().collection("Usuario")
+                .whereEqualTo("celular",celular)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+
+                        if (docs.isEmpty()) {
+                            AlertaUtils.dialogDuplo(act, "Número de telefone inválido, ou você ainda não possui uma conta.", "Criar conta", "Fechar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    MudarTelaController.irParaCadastroDeUsuario(true, act);
+                                }
+                            }, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            });
+                        }else {
+
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            if(user != null){
+                                MudarTelaController.irParaDashboard(true,act);
+                            }else {
+                                verificarTelefone(celular);
+                            }
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                AlertaUtils.fecharDialog();
+                AlertaUtils.dialogSimples(e.getMessage(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) { }
+                }, act);
+
+            }
+        });
+    }
+
+    public boolean validarDadosLogin(String celular){
 
         boolean valido = true;
 
-        edtUsuario.addTextChangedListener(new TextWatcher() {
+        edtCelular.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                edtUsuario.setTextColor(Color.BLACK);
-                edtUsuario.setHintTextColor(Color.BLACK);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-        edtsenha.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                edtsenha.setTextColor(Color.BLACK);
-                edtsenha.setHintTextColor(Color.BLACK);
+                edtCelular.setTextColor(Color.BLACK);
+                edtCelular.setHintTextColor(Color.BLACK);
             }
 
             @Override
@@ -171,74 +174,146 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        if(email.isEmpty()){
-            edtUsuario.setHintTextColor(Color.RED);
-            AlertaUtils.dialogSimples("Informe seu email!", new DialogInterface.OnClickListener() {
+        if(celular.isEmpty()){
+            edtCelular.setHintTextColor(Color.RED);
+            AlertaUtils.dialogSimples("Informe o número do seu celular!", new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-
-                }
+                public void onClick(DialogInterface dialogInterface, int i) { }
             }, this);
             return false;
-        }else {
-            if(!email.contains("@")){
-                edtUsuario.setTextColor(Color.RED);
-                AlertaUtils.dialogSimples("Formato de email inválido,\né nescessário possuir '@' no texto!", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                }, this);
-                return false;
-            }
-
-            if(!email.contains(".com")){
-                edtUsuario.setTextColor(Color.RED);
-                AlertaUtils.dialogSimples("Formato de email inválido,\né nescessário terminar com '.com' no texto!", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                }, this);
-                return false;
-            }
-        }
-
-        if(senha.isEmpty()){
-            edtsenha.setHintTextColor(Color.RED);
-            AlertaUtils.dialogSimples("Informe sua senha!", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-
-                }
-            }, this);
-            return false;
-        }else {
-
-            if(senha.length() < 6){
-
-                edtsenha.setTextColor(Color.RED);
-                AlertaUtils.dialogSimples("Senha inválida,\né nescessário ter no mínimo 6 dígitos!", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                }, this);
-                return false;
-
-            }
         }
 
         if(checkBoxLembrarMe.isChecked()) {
-            SharedPreferencesUtils.salvarStringPreferences("email", email, act);
-            SharedPreferencesUtils.salvarStringPreferences("senha", senha, act);
+            SharedPreferencesUtils.salvarStringPreferences("celular", celular, act);
         }else {
-            SharedPreferencesUtils.salvarStringPreferences("email", "", act);
-            SharedPreferencesUtils.salvarStringPreferences("senha", "", act);
+            SharedPreferencesUtils.salvarStringPreferences("celular", "", act);
         }
 
         SharedPreferencesUtils.salvarBooleanPreferences("lembrarme",checkBoxLembrarMe.isChecked(),act);
 
         return valido;
+    }
+
+    private void verificarTelefone(String celularInformado) {
+
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                "+55" + celularInformado,
+                20,
+                TimeUnit.SECONDS,
+                TaskExecutors.MAIN_THREAD,
+                mCallbacks);
+
+    }
+
+    // verifica o codigo automatico
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        @Override
+        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+
+            String code = phoneAuthCredential.getSmsCode();
+
+            if (code != null) {
+                verificarSMSRecebido(code);
+            }else{
+
+                if(phoneAuthCredential != null) {
+                    signInWithPhoneAuthCredential(phoneAuthCredential);
+                }else {
+                    verificarCodigoManual();
+                }
+            }
+        }
+
+        @Override
+        public void onVerificationFailed(FirebaseException e) {
+            Toast.makeText(act, e.getMessage(), Toast.LENGTH_LONG).show();
+
+            AlertaUtils.fecharDialog();
+
+            AlertaUtils.dialogSimples("Não foi possivel enviar o código, aguarde 2 minutos e tente novamente\n"+e.getMessage(), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) { }
+            },act);
+
+        }
+
+        @Override
+        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            super.onCodeSent(s, forceResendingToken);
+            mVerificationId = s;
+
+            verificarCodigoManual();
+        }
+
+        @Override
+        public void onCodeAutoRetrievalTimeOut(@NonNull String s) {
+            super.onCodeAutoRetrievalTimeOut(s);
+
+            AlertaUtils.dialogSimples(s, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) { }
+            },act);
+
+        }
+    };
+
+    private void verificarCodigoManual(){
+
+        AlertaUtils.fecharDialog();
+
+        View v = (View) getLayoutInflater().inflate(R.layout.modal_verificacao_code_manual,null);
+        EditText editText = v.findViewById(R.id.edtCodigo);
+
+        AlertaUtils.dialogCustomizado(act, v, "Entrar", "Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface positivo, int i) {
+
+                String codigo = editText.getText().toString();
+                verificarSMSRecebido(codigo);
+
+            }
+        }, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface negativo, int i) {
+
+            }
+        });
+
+
+    }
+
+    private void verificarSMSRecebido(String otp) {
+        //creating the credential
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
+
+        //signing the user
+        signInWithPhoneAuthCredential(credential);
+    }
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            MudarTelaController.irParaDashboard(true,act);
+                        } else {
+
+                            //verification unsuccessful.. display an error message
+
+                            String message = "Somthing is wrong, we will fix it soon...";
+
+                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                message = "Invalid code entered...";
+                            }
+
+                            AlertaUtils.dialogSimples(message, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) { }
+                            },act);
+                        }
+                    }
+                });
     }
 }
