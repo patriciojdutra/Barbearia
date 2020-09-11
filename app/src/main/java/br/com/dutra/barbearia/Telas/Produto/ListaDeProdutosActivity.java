@@ -50,15 +50,15 @@ public class ListaDeProdutosActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 if(item.getItemId() == R.id.action_cabelos) {
-
-
+                    baixarDados("cabelo");
                 }else if(item.getItemId() == R.id.action_roupas) {
-
+                    baixarDados("roupa");
                 }else if(item.getItemId() == R.id.action_bolsas) {
+                    baixarDados("bolsa");
                 }else if(item.getItemId() == R.id.action_brincos) {
-
+                    baixarDados("brinco");
                 }else if(item.getItemId() == R.id.action_outros) {
-
+                    baixarDados("outro");
                 }
 
                 return true;
@@ -66,7 +66,7 @@ public class ListaDeProdutosActivity extends AppCompatActivity {
         });
 
         associacao();
-        baixarDados();
+        baixarDados("cabelo");
 
     }
 
@@ -76,11 +76,15 @@ public class ListaDeProdutosActivity extends AppCompatActivity {
 
     }
 
-    public void baixarDados(){
+    public void baixarDados(String filtro){
+
+        listaDeProduto.clear();
 
         AlertaUtils.dialogLoad(act);
 
-        FirebaseFirestore.getInstance().collection("Produto").get()
+        FirebaseFirestore.getInstance().collection("Produto")
+                .whereEqualTo("tipo",filtro)
+                .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

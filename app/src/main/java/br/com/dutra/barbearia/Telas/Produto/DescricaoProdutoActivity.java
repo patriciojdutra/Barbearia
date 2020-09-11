@@ -101,7 +101,7 @@ public class DescricaoProdutoActivity extends AppCompatActivity {
 
         txtNomeDescricao.setText(produto.getNome());
         txtPrecoDescricao.setText(DinheiroUtils.convertDouble(produto.getPreco()));
-        txtQuantDescricao.setText(String.valueOf(produto.getQuantidade()));
+        txtQuantDescricao.setText("Estoque: " + produto.getQuantidade());
         txtDescricao.setText(produto.getDescricao());
 
         if(produto.getDescricao().isEmpty()){
@@ -119,7 +119,7 @@ public class DescricaoProdutoActivity extends AppCompatActivity {
         }
     }
 
-    public  void adicionaProdutoNaSacola(){
+    public void adicionaProdutoNaSacola(){
 
         String uid = FirebaseAuth.getInstance().getUid();
         String nome = produto.getNome();

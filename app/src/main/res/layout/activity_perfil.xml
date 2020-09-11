@@ -76,20 +76,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/edtCelular" />
 
             <EditText
-                android:id="@+id/edtUserlogin"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:backgroundTint="#92000000"
-                android:ems="10"
-                android:hint="E-mail"
-                android:textColorHint="@color/cinzatitulo"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toStartOf="@+id/textView12"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edtDataDeNascimento" />
-
-            <EditText
                 android:id="@+id/edtSenha"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -103,7 +89,7 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edtUserlogin" />
+                app:layout_constraintTop_toBottomOf="@+id/edtDataDeNascimento" />
 
             <EditText
                 android:id="@+id/edtCpfOuCnpj"
@@ -122,21 +108,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edtSenha" />
 
-            <TextView
-                android:id="@+id/textView12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="\@gmail.com"
-                android:textColor="@color/cinzatitulo"
-                app:layout_constraintBottom_toTopOf="@+id/edtSenha"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edtDataDeNascimento" />
-
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgFoto"
                 android:layout_width="0dp"
-                android:layout_height="87dp"
+                android:layout_height="150dp"
                 android:layout_marginTop="16dp"
                 android:src="@drawable/suafoto1"
                 android:visibility="visible"

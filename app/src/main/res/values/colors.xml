@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00BCD4</color>
+    <color name="colorPrimary">#FD153E3E</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="corGeral">#E0F7FA</color>
+    <color name="corGeral">#FD153E3E</color>
     <color name="cinzatitulo">#B1AEAE</color>
     <color name="azulAfrontosa">#FD153E3E</color>
     <color name="branco">#FFFFFF</color>

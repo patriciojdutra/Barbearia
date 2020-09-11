@@ -16,113 +16,59 @@
             android:id="@+id/linearLayout12"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtQuantDescricao">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout15">
 
             <Button
                 android:id="@+id/btnMenos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:backgroundTint="@color/corGeral"
+                android:backgroundTint="@color/azulAfrontosa"
                 android:text="-"
                 android:textColor="#FFFFFF"
                 android:textSize="24sp" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <EditText
+                android:id="@+id/txtQuantidadeSelecionada"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <EditText
-                    android:id="@+id/txtQuantidadeSelecionada"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_weight="1"
-                    android:digits="0123456789"
-                    android:fontFamily="sans-serif"
-                    android:inputType="numberDecimal"
-                    android:text="1"
-                    android:textAlignment="center"
-                    android:textColor="@color/corGeral"
-                    android:textSize="30sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_weight="1.2"
+                android:background="@color/branco"
+                android:digits="0123456789"
+                android:fontFamily="sans-serif"
+                android:inputType="numberDecimal"
+                android:text="1"
+                android:textAlignment="center"
+                android:textColor="@color/azulAfrontosa"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/btnMais"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1  "
-                android:backgroundTint="@color/corGeral"
+                android:backgroundTint="@color/azulAfrontosa"
                 android:text="+"
                 android:textColor="#FFFFFF"
                 android:textSize="24sp" />
+
         </LinearLayout>
 
         <ImageView
             android:id="@+id/imgProdutoDescricao"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginStart="16dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/foto" />
-
-        <TextView
-            android:id="@+id/txtNomeDescricao"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Nome do produto "
-            android:textAlignment="center"
-            android:textColor="@color/corGeral"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imgProdutoDescricao" />
-
-        <TextView
-            android:id="@+id/txtPrecoDescricao"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:text="Valor"
-            android:textColor="@color/corGeral"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtNomeDescricao" />
-
-        <TextView
-            android:id="@+id/txtQuantDescricao"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="Quantidade"
-            android:textColor="@color/corGeral"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtPrecoDescricao" />
+            app:srcCompat="@drawable/logo250" />
 
 
         <ScrollView
@@ -146,7 +92,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="No Android 6.0 (API de nível 23) e versões anteriores, outros apps poderão ler seus arquivos internos se você definir o modo de arquivo como legível. No entanto, o outro app precisa saber o nome do pacote do app e os nomes dos arquivos. Outros apps não podem navegar nos diretórios internos e não têm permissão para leitura ou gravação, a menos que os arquivos sejam explicitamente definidos para essas ações. Portanto, contanto que você use o MODE_PRIVATE para seus arquivos no armazenamento interno, eles nunca ficarão acessíveis para outros apps. No Android 6.0 (API de nível 23) e versões anteriores, outros apps poderão ler seus arquivos internos se você definir o modo de arquivo como legível. No entanto, o outro app precisa saber o nome do pacote do app e os nomes dos arquivos. Outros apps não podem navegar nos diretórios internos e não têm permissão para leitura ou gravação, a menos que os arquivos sejam explicitamente definidos para essas ações. Portanto, contanto que você use o MODE_PRIVATE para seus arquivos no armazenamento interno, eles nunca ficarão acessíveis para outros apps. No Android 6.0 (API de nível 23) e versões anteriores, outros apps poderão ler seus arquivos internos se você definir o modo de arquivo como legível. No entanto, o outro app precisa saber o nome do pacote do app e os nomes dos arquivos. Outros apps não podem navegar nos diretórios internos e não têm permissão para leitura ou gravação, a menos que os arquivos sejam explicitamente definidos para essas ações. Portanto, contanto que você use o MODE_PRIVATE para seus arquivos no armazenamento interno, eles nunca ficarão acessíveis para outros apps. No Android 6.0 (API de nível 23) e versões anteriores, outros apps poderão ler seus arquivos internos se você definir o modo de arquivo como legível. No entanto, o outro app precisa saber o nome do pacote do app e os nomes dos arquivos. Outros apps não podem navegar nos diretórios internos e não têm permissão para leitura ou gravação, a menos que os arquivos sejam explicitamente definidos para essas ações. Portanto, contanto que você use o MODE_PRIVATE para seus arquivos no armazenamento interno, eles nunca ficarão acessíveis para outros apps."
-                    android:textAlignment="center"
+                    android:textAlignment="textStart"
+                    android:textColor="@android:color/background_dark"
                     android:visibility="visible" />
             </LinearLayout>
         </ScrollView>
@@ -156,12 +103,55 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:backgroundTint="@color/corGeral"
+            android:backgroundTint="@color/azulAfrontosa"
             android:text="Adicionar na sacola"
             android:textColor="#F8FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout15"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgProdutoDescricao">
+
+            <TextView
+                android:id="@+id/txtNomeDescricao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:text="Nome do produto "
+                android:textAlignment="textStart"
+                android:textColor="@color/azulAfrontosa"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtQuantDescricao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Quantidade"
+                android:textColor="@color/azulAfrontosa" />
+
+            <TextView
+                android:id="@+id/txtPrecoDescricao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="Valor"
+                android:textAlignment="textStart"
+                android:textColor="@color/azulAfrontosa"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

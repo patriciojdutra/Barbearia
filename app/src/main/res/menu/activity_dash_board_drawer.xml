@@ -29,10 +29,10 @@
             android:icon="@drawable/tesoura"
             android:title="@string/menu_gallery" />
 
-        <item
-            android:id="@+id/nav_barbeiros"
-            android:icon="@drawable/cortando"
-            android:title="Barbeiros" />
+<!--        <item-->
+<!--            android:id="@+id/nav_barbeiros"-->
+<!--            android:icon="@drawable/cortando"-->
+<!--            android:title="Barbeiros" />-->
 
         <item
             android:id="@+id/nav_localizacao"
@@ -43,10 +43,10 @@
             android:icon="@drawable/baseline_person_black_48"
             android:title="@string/menu_tools" />
 
-        <!--<item-->
-            <!--android:id="@+id/nav_reclame_aqui"-->
-            <!--android:icon="@drawable/baseline_thumb_down_black_48"-->
-            <!--android:title="Reclame aqui" />-->
+        <item
+            android:id="@+id/nav_reclame_aqui"
+            android:icon="@drawable/baseline_thumb_down_black_48"
+            android:title="Reclame aqui" />
 
         <!--<item-->
             <!--android:id="@+id/nav_configuracao"-->

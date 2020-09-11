@@ -58,7 +58,7 @@ public class AdaptadorListaDeProdutos extends BaseAdapter {
 
         final Produto item = itemList.get(position);
 
-        TextView txtNome = (TextView) view.findViewById(R.id.txtNome);
+        TextView txtNome = (TextView) view.findViewById(R.id.txtDescricao);
         txtNome.setText(item.getNome());
 
         TextView txtPreco = (TextView) view.findViewById(R.id.txtPreco);

@@ -93,7 +93,9 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == IMAGE_GALLERY_REQUEST && resultCode == RESULT_OK && null != data) {
+
+
+        if (requestCode == 1 && resultCode == RESULT_OK && null != data) {
 
             uriDaImagemSelecionada  = data.getData();
             imgFoto.setImageURI(uriDaImagemSelecionada);
@@ -107,7 +109,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         edtNome = (EditText)findViewById(R.id.edtNome);
         edtCelular = (EditText)findViewById(R.id.edtCelular);
         edtDataDeNascimento = (EditText)findViewById(R.id.edtDataDeNascimento);
-        edtUserLogin = (EditText)findViewById(R.id.edtUserlogin);
+        edtUserLogin = new EditText(this);
         edtSenha = (EditText)findViewById(R.id.edtSenha);
         edtCpfOuCnpj = (EditText)findViewById(R.id.edtCpfOuCnpj);
         btnSalvar = (Button) findViewById(R.id.btnSalvar);
@@ -134,9 +136,14 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
                 if(validacaoCadastro()) {
                     cadastraUsuarioNoServidor();
                 }
+
+
             }
         });
 
@@ -146,8 +153,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
         String nome = edtNome.getText().toString();
         String celular = edtCelular.getText().toString();
-        String DataNascimento = edtDataDeNascimento.getText().toString();
-        String UserLogin = edtUserLogin.getText().toString();
+        String dataNascimento = edtDataDeNascimento.getText().toString();
         String senha = edtSenha.getText().toString();
 
         if(uriDaImagemSelecionada == null){
@@ -160,8 +166,38 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
             return false;
         }
 
-        if(nome.length()<1){
+        if(nome.trim().isEmpty()){
             AlertaUtils.dialogSimples("Nome não pode ser vazio", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
+            return false;
+        }
+
+        if(celular.trim().isEmpty()){
+            AlertaUtils.dialogSimples("Celular não pode ser vazio", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
+            return false;
+        }
+
+        if(senha.trim().isEmpty()){
+            AlertaUtils.dialogSimples("Senha não pode ser vazio", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }, act);
+            return false;
+        }
+
+        if(dataNascimento.trim().isEmpty()){
+            AlertaUtils.dialogSimples("Data de nascimento não pode ser vazio", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -423,7 +459,10 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
     public void setarDadosUsuario(Usuario usuario){
 
-        btnAtualizar.setVisible(true);
+        if(btnAtualizar != null){
+            btnAtualizar.setVisible(true);
+        }
+
         edtNome.setText(usuario.getNome());
         edtCelular.setText(usuario.getCelular());
         edtDataDeNascimento.setText(usuario.getDataDeNascimento());

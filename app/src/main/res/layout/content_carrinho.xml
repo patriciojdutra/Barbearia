@@ -28,7 +28,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:cardBackgroundColor="@color/corGeral"
+        app:cardBackgroundColor="@color/azulAfrontosa"
         app:cardCornerRadius="4dp"
         app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -41,6 +41,17 @@
             android:layout_margin="4dp"
             android:background="#FFFFFF">
 
+            <Button
+                android:id="@+id/btnComprar"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:backgroundTint="@color/azulAfrontosa"
+                android:text="Finalizar comprar"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/txtTotalDeTodosProdutoCarrinho"
                 android:layout_width="0dp"
@@ -49,23 +60,12 @@
                 android:fontFamily="sans-serif"
                 android:text="Total: R$ 575,99"
                 android:textAlignment="center"
-                android:textColor="#4CAF50"
+                android:textColor="#3A6A3C"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btnComprar"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/btnComprar"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:backgroundTint="@color/corGeral"
-                android:text="Finalizar comprar"
-                android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

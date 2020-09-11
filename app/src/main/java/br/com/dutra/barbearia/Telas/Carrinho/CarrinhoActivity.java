@@ -218,7 +218,7 @@ public class CarrinhoActivity extends AppCompatActivity {
 
         builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int res) {
-
+                finish();
             }
         });
 

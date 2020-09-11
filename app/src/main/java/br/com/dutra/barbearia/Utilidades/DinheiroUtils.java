@@ -25,6 +25,7 @@ public class DinheiroUtils {
         try {
             sValor = sValor.replace(".", "");
             sValor = sValor.replace(",", ".");
+            sValor = sValor.trim();
             double dValor = Double.parseDouble(sValor);
             return dValor;
         }catch (Exception e){

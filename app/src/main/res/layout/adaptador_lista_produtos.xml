@@ -43,7 +43,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txtNome"
+            android:id="@+id/txtDescricao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -69,7 +69,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtNome" />
+            app:layout_constraintTop_toBottomOf="@+id/txtDescricao" />
 
         <TextView
             android:id="@+id/txtQuantiEstoque"

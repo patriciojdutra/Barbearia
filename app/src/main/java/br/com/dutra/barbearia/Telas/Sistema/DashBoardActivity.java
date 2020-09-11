@@ -13,15 +13,19 @@ import android.view.MenuInflater;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
 import android.view.MenuItem;
 
+import androidx.core.widget.NestedScrollView;
 import br.com.dutra.barbearia.Configuracoes.ConfiguracaoApplication;
 import br.com.dutra.barbearia.Controllers.MudarTelaController;
 import br.com.dutra.barbearia.Modelo.Banner;
+import br.com.dutra.barbearia.Modelo.BannerDuracao;
+import br.com.dutra.barbearia.Modelo.Conteudo;
 import br.com.dutra.barbearia.Modelo.Usuario.Usuario;
 import br.com.dutra.barbearia.R;
 import br.com.dutra.barbearia.Telas.Agendamento.AgendaActivity;
@@ -29,6 +33,7 @@ import br.com.dutra.barbearia.Telas.Agendamento.MeusAgendamentosActivity;
 import br.com.dutra.barbearia.Telas.BatePapo.ListaDeConversasActivity;
 import br.com.dutra.barbearia.Telas.Carrinho.CarrinhoActivity;
 import br.com.dutra.barbearia.Telas.Local.MapsActivity;
+import br.com.dutra.barbearia.Telas.ReclameAqui.ReclameAquiActivity;
 import br.com.dutra.barbearia.Utilidades.AlertaUtils;
 import br.com.dutra.barbearia.Utilidades.Utilitario;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,14 +54,17 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.smarteist.autoimageslider.SliderLayout;
 import com.smarteist.autoimageslider.SliderView;
+import com.squareup.picasso.Picasso;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,10 +93,9 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
     MenuItem iconeCarrinho;
 
     private List<Banner> listaDeBanner = new ArrayList<>();
-
+    private List<Conteudo> listaDeConteudo = new ArrayList<>();
 
     SliderLayout sliderLayout;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +139,7 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
 
         linearScroll = findViewById(R.id.linearScroll);
 
-        if( Utilitario.verifiacrAutencicao(act)){
+        if(Utilitario.verifiacrAutencicao(act)){
 
             ConfiguracaoApplication application = (ConfiguracaoApplication) getApplication();
             getApplication().registerActivityLifecycleCallbacks(application);
@@ -143,9 +150,10 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
         }
 
         sliderLayout = findViewById(R.id.imageSlider);
-        sliderLayout.setIndicatorAnimation(SliderLayout.Animations.WORM); //set indicator animation by using SliderLayout.Animations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+        sliderLayout.setIndicatorAnimation(SliderLayout.Animations.WORM);
         sliderLayout.setScrollTimeInSec(5); //set scroll delay in seconds :
 
+        baixarDuracaoDoBanner();
         baixarDadosDoBanner();
 
     }
@@ -228,13 +236,21 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
 
 
         if (id == R.id.nav_meus_atendimentos) {
-            Intent mudarTela = new Intent(getApplicationContext(), MeusAgendamentosActivity.class);
-            startActivity(mudarTela);
+
+            if(Utilitario.verifiacrAutencicao(act)) {
+                MudarTelaController.irParaMeusAtendimentos(false, act);
+            }else {
+                MudarTelaController.irParaTelaDeLogin(false, act);
+            }
         }
 
         if (id == R.id.nav_agendamento) {
-            Intent mudarTela = new Intent(getApplicationContext(),AgendaActivity.class);
-            startActivity(mudarTela);
+
+            if(Utilitario.verifiacrAutencicao(act)) {
+                MudarTelaController.irParaAgendamento(false, act);
+            }else {
+                MudarTelaController.irParaTelaDeLogin(false, act);
+            }
         }
 
 //        if (id == R.id.nav_carrinho) {
@@ -243,15 +259,14 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
 //        }
 
         if (id == R.id.nav_servicos) {
-            Intent mudartela = new Intent(getApplicationContext(), ServicosActivity.class);
-            startActivity(mudartela);
+            MudarTelaController.irParaServicos(false, act);
         }
 
-        if (id == R.id.nav_barbeiros) {
-            Intent it = new Intent(this, ListaDeConversasActivity.class);
-            it.putExtra("solicitacao","Barbeiro");
-            startActivity(it);
-        }
+//        if (id == R.id.nav_barbeiros) {
+//            Intent it = new Intent(this, ListaDeConversasActivity.class);
+//            it.putExtra("solicitacao","Barbeiro");
+//            startActivity(it);
+//        }
 
         if (id == R.id.nav_localizacao) {
             Intent mudartela = new Intent(getApplicationContext(), MapsActivity.class);
@@ -266,10 +281,14 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
 //            startActivity(mudartela);
         }
 
-//        if (id == R.id.nav_reclame_aqui) {
-//            Intent mudarTela = new Intent(getApplicationContext(), ReclameAquiActivity.class);
-//            startActivity(mudarTela);
-//        }
+        if (id == R.id.nav_reclame_aqui) {
+
+            if(Utilitario.verifiacrAutencicao(act)) {
+                MudarTelaController.irParaReclameAqui(false, act);
+            }else {
+                MudarTelaController.irParaTelaDeLogin(false, act);
+            }
+        }
 //
 //        if (id == R.id.nav_configuracao) {
 //            Intent mudartela = new Intent(getApplicationContext(), ConfiguracaoActivity.class);
@@ -331,7 +350,7 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
                     if(usuarioLogado.getTipoUsuario().equalsIgnoreCase("C")){
                         iconeGerenciamento.setVisible(false);
                         iconeUpdate.setVisible(false);
-                        iconeCarrinho.setVisible(false);
+                        iconeCarrinho.setVisible(true);
                     }else {
                         iconeCarrinho.setVisible(false);
                         iconeGerenciamento.setVisible(true);
@@ -386,6 +405,25 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
         }
     }
 
+    public void baixarDuracaoDoBanner(){
+
+        FirebaseFirestore.getInstance()
+                .collection("BannerDuracao")
+                .document("Tempo")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        try {
+                            BannerDuracao bannerDuracao = documentSnapshot.toObject(BannerDuracao.class);
+                            sliderLayout.setScrollTimeInSec(bannerDuracao.getDuracao()); //set scroll delay in seconds :
+                        }catch (Exception e){
+                            Toast.makeText(act, "no set duracao", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
     public void baixarDadosDoBanner(){
 
         AlertaUtils.dialogLoad(act);
@@ -405,24 +443,46 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
                             }
                         }
 
-                        AlertaUtils.getDialog().dismiss();
-
                         setarBanner();
+
+                        baixarDadosDoDashboard();
+
                     }
                 });
+
+    }
+
+    public void baixarDadosDoDashboard(){
+
+        FirebaseFirestore.getInstance().collection("Conteudo").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+
+                        if (!docs.isEmpty()) {
+
+                            for (DocumentSnapshot doc : docs) {
+                                Conteudo conteudo = doc.toObject(Conteudo.class);
+                                listaDeConteudo.add(conteudo);
+                            }
+                        }
+
+                        AlertaUtils.getDialog().dismiss();
+
+                        setarConteudo();
+                    }
+                });
+
+
+
 
     }
 
     private void setarBanner() {
 
         for (int i = 0; i < listaDeBanner.size() ; i++) {
-
-            LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.adaptador_card_style_1,null);
-            linearScroll.addView(linearLayout);
-
-            LinearLayout linearLayout2 = (LinearLayout) getLayoutInflater().inflate(R.layout.adaptador_card_style_2,null);
-            linearScroll.addView(linearLayout2);
-
 
             SliderView sliderView = new SliderView(this);
             sliderView.setDescription(listaDeBanner.get(i).getDescricao());
@@ -442,5 +502,100 @@ public class DashBoardActivity extends AppCompatActivity  implements NavigationV
 
         }
     }
+
+    private void setarConteudo() {
+
+        for (int i = 0; i < listaDeConteudo.size() ; i++) {
+
+           if(listaDeConteudo.get(i).getTipoDeLayout().equals("1")){
+
+               LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.adaptador_card_style_1,null);
+               TextView txtTitulo = linearLayout.findViewById(R.id.txtTitulo);
+               ImageView imgProduto = linearLayout.findViewById(R.id.imgProduto1);
+               TextView txtDescricao = linearLayout.findViewById(R.id.txtDescricao);
+               TextView txtPreco = linearLayout.findViewById(R.id.txtPreco);
+
+               txtTitulo.setText(listaDeConteudo.get(i).getTitulo());
+               txtDescricao.setText(listaDeConteudo.get(i).getDescricao());
+               txtPreco.setText(listaDeConteudo.get(i).getPreco());
+
+               try {
+                   Picasso.get().load(listaDeConteudo.get(i).getUrl().get(0)).into(imgProduto);
+               }catch (Exception e){}
+
+               linearScroll.addView(linearLayout);
+
+           }
+           else if(listaDeConteudo.get(i).getTipoDeLayout().equals("2")){
+
+               LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.adaptador_card_style_2,null);
+               TextView txtTitulo = linearLayout.findViewById(R.id.txtTitulo);
+               ImageView imgProduto1 = linearLayout.findViewById(R.id.imgProduto1);
+               ImageView imgProduto2 = linearLayout.findViewById(R.id.imgProduto2);
+               TextView txtDescricao = linearLayout.findViewById(R.id.txtDescricao);
+               TextView txtPreco = linearLayout.findViewById(R.id.txtPreco);
+
+               txtTitulo.setText(listaDeConteudo.get(i).getTitulo());
+               txtDescricao.setText(listaDeConteudo.get(i).getDescricao());
+               txtPreco.setText(listaDeConteudo.get(i).getPreco());
+
+               try {
+                   Picasso.get().load(listaDeConteudo.get(i).getUrl().get(0)).into(imgProduto1);
+                   Picasso.get().load(listaDeConteudo.get(i).getUrl().get(1)).into(imgProduto2);
+               }catch (Exception e){}
+
+               linearScroll.addView(linearLayout);
+
+           }else if(listaDeConteudo.get(i).getTipoDeLayout().equals("3")){
+
+               LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.adaptador_card_style_3,null);
+               TextView txtTitulo = linearLayout.findViewById(R.id.txtTitulo);
+               ImageView imgProduto1 = linearLayout.findViewById(R.id.imgProduto1);
+               ImageView imgProduto2 = linearLayout.findViewById(R.id.imgProduto2);
+               ImageView imgProduto3 = linearLayout.findViewById(R.id.imgProduto3);
+               TextView txtDescricao = linearLayout.findViewById(R.id.txtDescricao);
+               TextView txtPreco = linearLayout.findViewById(R.id.txtPreco);
+
+               txtTitulo.setText(listaDeConteudo.get(i).getTitulo());
+               txtDescricao.setText(listaDeConteudo.get(i).getDescricao());
+               txtPreco.setText(listaDeConteudo.get(i).getPreco());
+
+               try {
+                   Picasso.get().load(listaDeConteudo.get(i).getUrl().get(0)).into(imgProduto1);
+                   Picasso.get().load(listaDeConteudo.get(i).getUrl().get(1)).into(imgProduto2);
+                   Picasso.get().load(listaDeConteudo.get(i).getUrl().get(2)).into(imgProduto3);
+               }catch (Exception e){}
+
+               linearScroll.addView(linearLayout);
+
+           }else if(listaDeConteudo.get(i).getTipoDeLayout().equals("4")){
+
+               LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.adaptador_card_style_4,null);
+               TextView txtTitulo = linearLayout.findViewById(R.id.txtTitulo);
+               ImageView imgProduto1 = linearLayout.findViewById(R.id.imgProduto1);
+               ImageView imgProduto2 = linearLayout.findViewById(R.id.imgProduto2);
+               ImageView imgProduto3 = linearLayout.findViewById(R.id.imgProduto3);
+               ImageView imgProduto4 = linearLayout.findViewById(R.id.imgProduto4);
+               TextView txtDescricao = linearLayout.findViewById(R.id.txtDescricao);
+               TextView txtPreco = linearLayout.findViewById(R.id.txtPreco);
+
+               txtTitulo.setText(listaDeConteudo.get(i).getTitulo());
+               txtDescricao.setText(listaDeConteudo.get(i).getDescricao());
+               txtPreco.setText(listaDeConteudo.get(i).getPreco());
+
+               try {
+                   Picasso.get().load(listaDeConteudo.get(i).getUrl().get(0)).into(imgProduto1);
+                   Picasso.get().load(listaDeConteudo.get(i).getUrl().get(1)).into(imgProduto2);
+                   Picasso.get().load(listaDeConteudo.get(i).getUrl().get(2)).into(imgProduto3);
+                   Picasso.get().load(listaDeConteudo.get(i).getUrl().get(3)).into(imgProduto4);
+               }catch (Exception e){}
+
+               linearScroll.addView(linearLayout);
+
+           }
+        }
+    }
+
+
 }
 

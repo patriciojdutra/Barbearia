@@ -34,7 +34,6 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
 
     private Activity act = this;
     private Usuario usuario;
-    private Cartao cartao;
     private Endereco endereco;
 
     private EditText editTextBloco1;
@@ -45,15 +44,12 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
     private EditText editTextDataVencimento2;
     private EditText editTextCVV;
     private EditText txtNomeNoCartao;
-    private ImageView imgStatusCartaoCadastrado;
     private ImageView imgStatusEnderecoCadastrado;
     private ImageView imgStatusUsuarioCadastrado;
 
-    private Button btnCadastrarCartao;
     private Button btnCadastroEndereco;
     private Button btnCadastroUsuario;
 
-    private boolean cartaoCadastroOk = false;
     private boolean enderecoCadastroOk = false;
     private boolean usuarioCadastroOk = false;
 
@@ -66,11 +62,9 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        imgStatusCartaoCadastrado = findViewById(R.id.imgStatusCartaoCadastrado);
         imgStatusEnderecoCadastrado = findViewById(R.id.imgStatusEnderecoCadastrado);
         imgStatusUsuarioCadastrado = findViewById(R.id.imgStatusUsuarioCadastrado);
 
-        btnCadastrarCartao = findViewById(R.id.btnCadastrarCartao);
         btnCadastroEndereco = findViewById(R.id.btnCadastroEndereco);
         btnCadastroUsuario = findViewById(R.id.btnCadastroUsuario);
 
@@ -82,209 +76,6 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
         super.onStart();
 
         buscarDadosUsuario();
-
-        btnCadastroUsuario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent it = new Intent(getApplicationContext(),CadastroUsuarioActivity.class);
-                it.putExtra("solicitacao","finalizarCadastro");
-                startActivity(it);
-            }
-        });
-
-        btnCadastrarCartao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                View view = getLayoutInflater().inflate(R.layout.layout_cadastro_cartao, null);
-
-                editTextBloco1 = view.findViewById(R.id.editTextBloco1);
-                editTextBloco2 = view.findViewById(R.id.editTextBloco2);
-                editTextBloco3 = view.findViewById(R.id.editTextBloco3);
-                editTextBloco4 = view.findViewById(R.id.editTextBloco4);
-                editTextDataVencimento1 = view.findViewById(R.id.editTextDataValidade1);
-                editTextDataVencimento2 = view.findViewById(R.id.editTextDataValidade2);
-                editTextCVV = view.findViewById(R.id.editTextCVV);
-                txtNomeNoCartao = view.findViewById(R.id.txtNomeNoCartao);
-                Button btnSalvar = view.findViewById(R.id.btnLogar);
-                Button btnCancelar = view.findViewById(R.id.btnCancelarCartao);
-
-                if(usuario!=null){
-                    txtNomeNoCartao.setText(usuario.getNome()+" "+usuario.getSobrenome());
-                }
-
-                if(cartao != null){
-
-                    try{
-
-                        editTextBloco1.setText(cartao.getNumeroDoCartao().substring(0,4));
-                        editTextBloco2.setText(cartao.getNumeroDoCartao().substring(4,8));
-                        editTextBloco3.setText(cartao.getNumeroDoCartao().substring(8,12));
-                        editTextBloco4.setText(cartao.getNumeroDoCartao().substring(12,16));
-
-                    }catch (Exception e){ }
-
-                    editTextDataVencimento1.setText(cartao.getMesValido());
-                    editTextDataVencimento2.setText(cartao.getAnoValido());
-                    editTextCVV.setText(cartao.getCodigoDocartão());
-                    txtNomeNoCartao.setText(cartao.getNomeNoCartão());
-                    btnSalvar.setText("Atualizar");
-                }
-
-
-                btnSalvar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String uid = FirebaseAuth.getInstance().getUid();
-                        String numeroCartao = editTextBloco1.getText().toString()+editTextBloco2.getText().toString()+editTextBloco3.getText().toString()+editTextBloco4.getText().toString();
-                        String mesVencimento = editTextDataVencimento1.getText().toString();
-                        String anoVencimento = editTextDataVencimento2.getText().toString();
-                        String codigoCartao = editTextCVV.getText().toString();
-                        String nomeNoCartao = txtNomeNoCartao.getText().toString();
-                        String dataNascimento = usuario.getDataDeNascimento();
-                        String CnpjOuCpf = usuario.getCpfouCnpj();
-                        Cartao cartao = new Cartao(uid,mesVencimento,anoVencimento,numeroCartao,codigoCartao,nomeNoCartao,dataNascimento,CnpjOuCpf);
-                        if(validarCartao()){
-                            cadastrarCartao(cartao);
-                        }
-
-                    }
-                });
-
-                btnCancelar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(alerta!=null){
-                            alerta.dismiss();
-                        }
-                    }
-                });
-
-                editTextBloco1.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                        if(charSequence.length()==4){
-                            editTextBloco2.requestFocus();
-                        }
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-
-                    }
-                });
-                editTextBloco2.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                        if(charSequence.length()==4){
-                            editTextBloco3.requestFocus();
-                        }
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-
-                    }
-                });
-                editTextBloco3.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                        if(charSequence.length()==4){
-                            editTextBloco4.requestFocus();
-                        }
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-
-                    }
-                });
-                editTextBloco4.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                        if(charSequence.length()==4){
-                            editTextDataVencimento1.requestFocus();
-                        }
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-
-                    }
-                });
-                editTextDataVencimento1.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                        if(charSequence.length()==2){
-                            editTextDataVencimento2.requestFocus();
-                        }
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-
-                    }
-                });
-                editTextDataVencimento2.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                        if(charSequence.length()==2){
-                            editTextCVV.requestFocus();
-                        }
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-
-                    }
-                });
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(act);
-                builder.setTitle("Informe os dados do seu cartão!");
-                builder.setIcon(R.drawable.logo250);
-                builder.setView(view);
-                alerta = builder.create();
-                alerta.show();
-
-            }
-        });
-
 
         btnCadastroEndereco.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -362,7 +153,7 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
 
-        if(usuarioCadastroOk && cartaoCadastroOk && enderecoCadastroOk){
+        if(usuarioCadastroOk && enderecoCadastroOk){
             AlertaUtils.dialogDadosDePagamentoOk(act);
         }else {
             Intent it = new Intent(act.getApplicationContext(), CarrinhoActivity.class);
@@ -384,7 +175,7 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
                 usuario = documentSnapshot.toObject(Usuario.class);
                 verificarCadastroDoUsuario(usuario);
 
-                buscarCartao();
+                buscarEndereco();
 
 
             }})
@@ -393,30 +184,6 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         AlertaUtils.getDialog().dismiss();
                         //AlertaUtils.dialogSimples(e.getMessage(),act);
-                    }
-                });
-    }
-
-    public void buscarCartao(){
-
-        String uId = FirebaseAuth.getInstance().getUid();
-
-        DocumentReference docRef = FirebaseFirestore.getInstance().collection("Cartao").document(uId);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                cartao = documentSnapshot.toObject(Cartao.class);
-                verificarCadastroDoCartao(cartao);
-
-                buscarEndereco();
-
-            }})
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        AlertaUtils.getDialog().dismiss();
-                       // AlertaUtils.dialogSimples(e.getMessage(),act);
                     }
                 });
     }
@@ -451,31 +218,6 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
     public boolean validarEndereco(){
 
         return true;
-    }
-
-    public void cadastrarCartao(Cartao cartao){
-
-        AlertaUtils.dialogLoad(act);
-        FirebaseFirestore.getInstance().collection("Cartao")
-                .document(cartao.getIdDoUsuario())
-                .set(cartao)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        AlertaUtils.getDialog().dismiss();
-                        if(alerta!=null)
-                            alerta.dismiss();
-
-                        buscarDadosUsuario();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        AlertaUtils.getDialog().dismiss();
-                        //AlertaUtils.dialogSimples(e.getMessage(),act);
-                    }
-                });
     }
 
     public void cadastrarEndereco(Endereco endereco){
@@ -514,18 +256,6 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
         dadosOk();
     }
 
-    public void verificarCadastroDoCartao(Cartao cartao){
-
-        if(cartao!=null){
-            imgStatusCartaoCadastrado.setImageResource(R.drawable.baseline_access_time_24);
-            btnCadastrarCartao.setText("Alterar dados?\nclique aqui");
-            cartaoCadastroOk = true;
-        }
-
-        dadosOk();
-
-    }
-
     public void verificarCadastroDoUsuario(Usuario usuario){
 
         if(usuario.getCpfouCnpj() !=null && (usuario.getCpfouCnpj().length() == 11 || usuario.getCpfouCnpj().length() == 14)){
@@ -539,7 +269,7 @@ public class CadastroDePagamentoActivity extends AppCompatActivity {
 
     public void dadosOk(){
 
-        if(usuarioCadastroOk && cartaoCadastroOk && enderecoCadastroOk){
+        if(usuarioCadastroOk && enderecoCadastroOk){
             AlertaUtils.dialogDadosDePagamentoOk(act);
         }
     }

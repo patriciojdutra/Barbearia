@@ -12,7 +12,9 @@ import br.com.dutra.barbearia.Telas.Sistema.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Utilitario {
 
@@ -77,6 +79,24 @@ public class Utilitario {
         }, mYear, mMonth, mDay);
 
         datePickerDialog.show();
+    }
+
+    public static String dataEHoraAtual(){
+        SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy-HH:mm:ss");
+        String data = formataData.format(new Date());
+        return data.replace("-","/");
+    }
+
+    public static String dataAtual(){
+        SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy");
+        String data = formataData.format(new Date());
+        return data.replace("-","/");
+    }
+
+    public static String horaAtual(){
+        SimpleDateFormat formataData = new SimpleDateFormat("HH:mm:ss");
+        String hora = formataData.format(new Date());
+        return hora;
     }
 
 }

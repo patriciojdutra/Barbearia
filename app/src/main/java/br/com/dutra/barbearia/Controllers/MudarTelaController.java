@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 
 import br.com.dutra.barbearia.Telas.Agendamento.AgendaActivity;
+import br.com.dutra.barbearia.Telas.Agendamento.MeusAgendamentosActivity;
 import br.com.dutra.barbearia.Telas.Atividade.AtividadeActivity;
 import br.com.dutra.barbearia.Telas.Local.MapsActivity;
 import br.com.dutra.barbearia.Telas.Produto.ListaDeProdutosActivity;
+import br.com.dutra.barbearia.Telas.ReclameAqui.ReclameAquiActivity;
 import br.com.dutra.barbearia.Telas.Sistema.DashBoardActivity;
 import br.com.dutra.barbearia.Telas.Sistema.LoginActivity;
 import br.com.dutra.barbearia.Telas.Sistema.ServicosActivity;
@@ -65,6 +67,18 @@ public class MudarTelaController {
 
     public static void irParaContatos(boolean finalizarTela, Activity act){
         act.startActivity(new Intent(act, ServicosActivity.class));
+        if(finalizarTela)
+            act.finish();
+    }
+
+    public static void irParaMeusAtendimentos(boolean finalizarTela, Activity act){
+        act.startActivity(new Intent(act, MeusAgendamentosActivity.class));
+        if(finalizarTela)
+            act.finish();
+    }
+
+    public static void irParaReclameAqui(boolean finalizarTela, Activity act){
+        act.startActivity(new Intent(act, ReclameAquiActivity.class));
         if(finalizarTela)
             act.finish();
     }
