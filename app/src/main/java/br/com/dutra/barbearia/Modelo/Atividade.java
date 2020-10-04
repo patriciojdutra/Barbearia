@@ -1,9 +1,11 @@
 package br.com.dutra.barbearia.Modelo;
 
+import java.util.Date;
+
 public class Atividade {
 
     String idAtividade = "";
-    String data = "";
+    Date data = new Date();
     String nome = "";
     String telefone = "";
     String comoNosConheceu = "";
@@ -21,11 +23,11 @@ public class Atividade {
         this.idAtividade = idAtividade;
     }
 
-    public String getData() {
+    public Date getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(Date data) {
         this.data = data;
     }
 
