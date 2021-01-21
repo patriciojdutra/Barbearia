@@ -1,3 +1,4 @@
 # App Barbearia
-Um aplicativo onde testo diversas funções do firebase
-Aplicativo está incompleto, e sem boas praticas de programação
+Esse foi um dos meus primeiros projetos
+Um aplicativo onde testo diversas funções do firebase, o
+aplicativo está incompleto, e sem boas praticas de programação e sem padronização.
